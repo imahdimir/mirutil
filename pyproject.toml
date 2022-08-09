@@ -46,7 +46,5 @@ keywords = [
     "Stocks"]
 
 [project.urls]
-"Homepage" = "https://github.com/imahdimir/mirutil"
-"Bug Tracker" = "https://github.com/imahdimir/mir_tse/issues"
-##
-##
+"Homepage" = "https://github.com/imahdimir/pypkg-mirutil"
+"Bug Tracker" = "https://github.com/imahdimir/pypkg-mirutil/issues"
