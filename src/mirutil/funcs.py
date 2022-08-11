@@ -148,3 +148,22 @@ def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str):
     return JalaliDate(int(jd[:4]), int(jd[5:7]), int(jd[8:10]))
   elif cnd is None:
     raise ValueError
+
+def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
+  import re
+  from persiantools.jdatetime import JalaliDate
+
+
+  int_fmt_jd = r'1[34]\d\d[0-2]\d[0-3]\d'
+
+  if jdate is None:
+    return None
+
+  jd = str(int(jdate))
+
+  cnd = re.fullmatch(int_fmt_jd , jd)
+
+  if cnd is not None :
+    return JalaliDate(int(jd[:4]), int(jd[4:6]), int(jd[6:8]))
+  elif cnd is None:
+    raise ValueError
