@@ -128,3 +128,23 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
     _fp = Path(fp).with_stem('Sample').with_suffix('.xlsx')
     save_df_as_a_nice_xl(_df , _fp)
     print('random sample saved.')
+
+
+def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str):
+  import re
+  from persiantools.jdatetime import JalaliDate
+
+
+  iso_fmt_jd = r'1[34]\d\d-[0-2]\d-[0-3]\d'
+
+  if jdate_str is None:
+    return None
+
+  jd = str(jdate_str)
+
+  cnd = re.fullmatch(iso_fmt_jd , jd)
+
+  if cnd is not None :
+    return JalaliDate(int(jd[:4]), int(jd[5:7]), int(jd[8:10]))
+  elif cnd is None:
+    raise ValueError
