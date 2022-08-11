@@ -156,7 +156,7 @@ def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
 
   int_fmt_jd = r'1[34]\d\d[0-2]\d[0-3]\d'
 
-  if jdate is None:
+  if pd.isna(jdate):
     return None
 
   jd = str(int(jdate))
