@@ -137,7 +137,7 @@ def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str):
 
   iso_fmt_jd = r'1[34]\d\d-[0-2]\d-[0-3]\d'
 
-  if jdate_str is None:
+  if pd.isna(jdate_str):
     return None
 
   jd = str(jdate_str)
