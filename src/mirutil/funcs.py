@@ -33,10 +33,10 @@ def norm_fa_str(string: str) -> str :
       r'\u200f' : '' ,
       r'ء'      : ' ' ,
       r'\s+'    : ' ' ,
-      r'آ'      : 'ا' ,
       r'أ'      : 'ا' ,
       r'ئ'      : 'ی' ,
       }
+
   for ky , vl in repmap.items() :
     os = re.sub(ky , vl , os)
 
