@@ -173,4 +173,4 @@ def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
 
 def print_df_columns_in_dict_type(df):
   for cn in df.columns:
-    print('"' + cn + '":None')
+    print('"' + cn + '":None,')
