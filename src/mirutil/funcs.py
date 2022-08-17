@@ -1,3 +1,5 @@
+##
+
 from pathlib import Path
 
 import pandas as pd
@@ -77,7 +79,7 @@ def save_df_as_a_nice_xl(df: pd.DataFrame ,
 
 def save_as_prq_wo_index(df , fpn) -> None :
   df.to_parquet(fpn , index = False)
-  print(f'dataframe saved as {fpn}')
+  print(f'dataframe saved as {fpn} without index')
 
 def read_data_according_to_type(fpn) -> pd.DataFrame :
   suf = Path(fpn).suffix
@@ -111,9 +113,10 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
 
   df = read_data_according_to_type(fp)
 
-  if meta[cns.startendcol] is not None :
-    meta[cns.start] = df[meta[cns.startendcol]].min()
-    meta[cns.end] = df[meta[cns.startendcol]].max()
+  if cns.startendcol in meta.keys():
+    if meta[cns.startendcol] is not None :
+      meta[cns.start] = df[meta[cns.startendcol]].min()
+      meta[cns.end] = df[meta[cns.startendcol]].max()
 
   meta[cns.numrow] = len(df)
   meta[cns.numcol] = len(df.columns)
@@ -167,3 +170,7 @@ def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
     return JalaliDate(int(jd[:4]), int(jd[4:6]), int(jd[6:8]))
   elif cnd is None:
     raise ValueError
+
+def print_df_columns_in_dict_type(df):
+  for cn in df.columns:
+    print('"' + cn + '":None')
