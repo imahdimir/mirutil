@@ -4,17 +4,17 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mirutil"
-version = "20220817.1"
+version = "2"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "Tools for getting and cleaning TSE data"
 readme = "README.md"
 license = { file = "LICENSE" }
 dependencies = [
-    "persiantools ~= 3.0.1",
+    "persiantools",
     "pandas",
     "pyarrow",
     "fastparquet",
-    "openpyxl ~= 3.0.10",
+    "openpyxl",
     "IPython"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -46,5 +46,5 @@ keywords = [
     "Stocks"]
 
 [project.urls]
-"Homepage" = "https://github.com/imahdimir/pypkg-mirutil"
-"Bug Tracker" = "https://github.com/imahdimir/pypkg-mirutil/issues"
+"Homepage" = "https://github.com/imahdimir/mirutil"
+"Bug Tracker" = "https://github.com/imahdimir/mirutil/issues"
