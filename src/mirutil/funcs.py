@@ -174,3 +174,18 @@ def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
 def print_df_columns_in_dict_type(df):
   for cn in df.columns:
     print('"' + cn + '":None,')
+
+def extract_market_from_tsetmc_title(title: str):
+
+  import re
+
+
+  os = title.replace("',FaraDesc ='" , ' ')
+  os = os.strip()
+
+  ptr = r'.+-\s*([^-]*)'
+  if re.fullmatch(ptr, os):
+    return re.sub(ptr, r'\1', os).strip()
+  else:
+    ptr = r'.+-\s*-\s*'
+    assert re.fullmatch(ptr,os)
