@@ -185,3 +185,47 @@ def extract_market_from_tsetmc_title(title: str):
   else:
     ptr = r'.+-\s*-\s*'
     assert re.fullmatch(ptr,os)
+
+def search_tsetmc(string) :
+  import requests
+
+
+  url = f'http://www.tsetmc.com/tsev2/data/search.aspx?skey={string}'
+
+  order_map = {
+      'Ticker'   : 0 ,
+      'Name'     : 1 ,
+      'ID-1'     : 2 ,
+      'ID-2'     : 3 ,
+      'ID-3'     : 4 ,
+      'ID-4'     : 5 ,
+      'unk6'     : 6 ,
+      'IsActive' : 7 ,
+      'unk8'     : 8 ,
+      'unk9'     : 9 ,
+      'Market'   : 10 ,
+      }
+
+  headers = {
+      'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+      }
+
+
+  rsp = requests.get(url , headers = headers)
+
+  rows = rsp.text.split(';')
+  rows = [x for x in rows if x != '']
+
+  df = pd.DataFrame(columns = order_map.keys())
+
+  for rw in rows :
+    vals = rw.split(',')
+    dfr = order_map.copy()
+
+    for ky , vl in order_map.items() :
+      dfr[ky] = vals[vl]
+
+    _df = pd.DataFrame(data = dfr , index = [0])
+    df = pd.concat([df , _df] , ignore_index = True)
+
+  return df
