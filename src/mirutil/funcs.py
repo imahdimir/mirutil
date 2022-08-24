@@ -5,26 +5,25 @@ from pathlib import Path
 import pandas as pd
 
 
-def norm_fa_str(string: str) -> str :
+def norm_fa_str(fa_str: str) -> str :
   """ Normalize Persian/Farsi strings to a much simpler form for unification purposes
 
   Usage::
   >>> from mirutil import norm_fa_str as norm
   >>> converted = norm("آگاه نیکو")
 
-  :param string: A string, will be simplified
+  :param fa_str: A string, will be simplified
   :rtype: str
   """
 
-  from persiantools import characters
   from persiantools import digits
   import re
 
 
-  if not isinstance(string , str) :
-    return string
+  if not isinstance(fa_str , str) :
+    return fa_str
 
-  os = characters.ar_to_fa(string)
+  os = fa_str
   os = digits.ar_to_fa(os)
   os = digits.fa_to_en(os)
 
