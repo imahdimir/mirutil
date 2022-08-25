@@ -282,21 +282,13 @@ def get_title_stocks_from_overview_page_by_stock_id(tsetmc_id) :
 
   return title
 
-async def get_resp(url , trust_env = True) :
-  from aiohttp import ClientSession
+def make_zero_padded_jdate(ist , sep = '/') :
+  spl = ist.split(sep)
 
+  for _i in range(1 , 3) :
+    if int(spl[_i]) < 10 :
+      spl[_i] = '0' + spl[_i]
 
-  async with ClientSession(trust_env = trust_env) as session :
-    return await session.get(url)
+  ou = '-'.join(spl)
 
-async def get_resps_of_urls(urls, trust_env = True) :
-  import asyncio
-  import nest_asyncio
-
-  nest_asyncio.apply()
-
-
-  fu = get_resp
-  tasks = [asyncio.create_task(fu(x, trust_env = trust_env)) for x in urls]
-
-  return await asyncio.gather(*tasks)
+  return ou
