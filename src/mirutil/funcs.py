@@ -254,3 +254,27 @@ def return_clusters_indices(iterable_obj , cluster_size = 100) :
 
   print(se_tuples)
   return se_tuples
+
+def get_title_stocks_from_overview_page_by_stock_id(tsetmc_id) :
+  import re
+
+  import requests
+
+
+  hdrs = {
+      'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+      }
+
+  url = f'http://www.tsetmc.com/Loader.aspx?ParTree=151311&i={tsetmc_id}'
+  r = requests.get(url , headers = hdrs)
+
+  title = re.findall(r"Title='(.+)',FaraDesc" , r.text)
+  print(title)
+
+  if len(title) == 0 :
+    return None
+
+  title = title[0]
+  title = title.strip()
+
+  return title
