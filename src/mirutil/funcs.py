@@ -223,7 +223,10 @@ def search_tsetmc(string) :
     dfr = order_map.copy()
 
     for ky , vl in order_map.items() :
-      dfr[ky] = vals[vl]
+      try:
+        dfr[ky] = vals[vl]
+      except IndexError:
+        dfr[ky] = None
 
     _df = pd.DataFrame(data = dfr , index = [0])
     df = pd.concat([df , _df] , ignore_index = True)
