@@ -229,3 +229,28 @@ def search_tsetmc(string) :
     df = pd.concat([df , _df] , ignore_index = True)
 
   return df
+
+def return_clusters_indices(iterable_obj , cluster_size = 100) :
+  intdiv = len(iterable_obj) // cluster_size
+
+  cis = [x * cluster_size for x in range(0 , intdiv + 1)]
+
+  if len(cis) > 1 :
+    if cis[-1] != len(iterable_obj) :
+      cis.append(cis[-1] + len(iterable_obj) % cluster_size)
+  else :
+    cis = [0 , len(iterable_obj)]
+    if cis == [0 , 0] :
+      cis = [0]
+
+  cis[0] = cis[0]
+
+  se_tuples = []
+  for _i in range(len(cis) - 1) :
+    si = cis[_i]
+    ei = cis[_i + 1] - 1
+    se = (si , ei)
+    se_tuples.append(se)
+
+  print(se_tuples)
+  return se_tuples
