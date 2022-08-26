@@ -55,11 +55,14 @@ def normalize_fa_str(fa_str: str) -> str :
   :param fa_str: A string, will be simplified
   :rtype: str
   """
+  from persiantools import characters
+
 
   if not isinstance(fa_str , str) :
     return fa_str
 
   os = convert_digits_to_en(fa_str)
+  os = characters.ar_to_fa(os)
   os = rm_odd_chars(os)
   os = strip_and_rm_successive_spaces_in_between(os)
 
