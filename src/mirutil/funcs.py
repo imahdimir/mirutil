@@ -1,48 +1,71 @@
 ##
 
-from pathlib import Path
 
-import pandas as pd
-
-
-def norm_fa_str(fa_str: str) -> str :
-  """ Normalize Persian/Farsi strings to a much simpler form for unification purposes
-
-  Usage::
-  >>> from mirutil import norm_fa_str as norm
-  >>> converted = norm("آگاه نیکو")
-
-  :param fa_str: A string, will be simplified
-  :rtype: str
-  """
-
+def convert_digits_to_en(istr) :
   from persiantools import digits
+
+
+  if not isinstance(istr , str) :
+    return istr
+
+  os = digits.ar_to_fa(istr)
+  os = digits.fa_to_en(os)
+
+  return os
+
+def rm_odd_chars(istr) :
   import re
 
 
-  if not isinstance(fa_str , str) :
-    return fa_str
-
-  os = fa_str
-  os = digits.ar_to_fa(os)
-  os = digits.fa_to_en(os)
+  if not isinstance(istr , str) :
+    return istr
 
   repmap = {
       r"\u202b" : ' ' ,
       r'\u200c' : ' ' ,
       r'\u200d' : '' ,
       r'\u200f' : '' ,
-      r'\s+'    : ' ' ,
       }
 
-  for ky , vl in repmap.items() :
-    os = re.sub(ky , vl , os)
+  os = istr
+  for ptr , rep in repmap.items() :
+    os = re.sub(ptr , rep , istr)
 
+  return os
+
+def strip_and_rm_successive_spaces_in_between(istr) :
+  import re
+
+
+  if not isinstance(istr , str) :
+    return istr
+
+  os = re.sub('\s+' , ' ' , istr)
   os = os.strip()
 
   return os
 
-def save_df_as_a_nice_xl(df: pd.DataFrame ,
+def normalize_fa_str(fa_str: str) -> str :
+  """ Normalize Persian/Farsi strings to a much simpler form for unification purposes
+
+  Usage::
+  >>> from mirutil import normalize as norm
+  >>> converted = norm("آگاه نیکو")
+
+  :param fa_str: A string, will be simplified
+  :rtype: str
+  """
+
+  if not isinstance(fa_str , str) :
+    return fa_str
+
+  os = convert_digits_to_en(fa_str)
+  os = rm_odd_chars(os)
+  os = strip_and_rm_successive_spaces_in_between(os)
+
+  return os
+
+def save_df_as_a_nice_xl(df ,
                          fpn ,
                          index: bool = False ,
                          header: bool = True ,
@@ -77,7 +100,11 @@ def save_as_prq_wo_index(df , fpn) -> None :
   df.to_parquet(fpn , index = False)
   print(f'dataframe saved as {fpn} without index')
 
-def read_data_according_to_type(fpn) -> pd.DataFrame :
+def read_data_according_to_type(fpn) :
+  from pathlib import Path
+  import pandas as pd
+
+
   suf = Path(fpn).suffix
   if suf == '.xlsx' :
     return pd.read_excel(fpn)
@@ -94,6 +121,8 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
   """
 
   import json
+  from pathlib import Path
+
   from .namespaces import MetadataColumns
 
 
@@ -109,7 +138,7 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
 
   df = read_data_according_to_type(fp)
 
-  if cns.startendcol in meta.keys():
+  if cns.startendcol in meta.keys() :
     if meta[cns.startendcol] is not None :
       meta[cns.start] = df[meta[cns.startendcol]].min()
       meta[cns.end] = df[meta[cns.startendcol]].max()
@@ -128,15 +157,16 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
     save_df_as_a_nice_xl(_df , _fp)
     print('random sample saved.')
 
-
-def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str):
+def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str) :
   import re
+
+  import pandas as pd
   from persiantools.jdatetime import JalaliDate
 
 
   iso_fmt_jd = r'1[34]\d\d-[0-2]\d-[0-3]\d'
 
-  if pd.isna(jdate_str):
+  if pd.isna(jdate_str) :
     return None
 
   jd = str(jdate_str)
@@ -144,18 +174,20 @@ def persian_tools_jdate_from_iso_format_jdate_str(jdate_str: str):
   cnd = re.fullmatch(iso_fmt_jd , jd)
 
   if cnd is not None :
-    return JalaliDate(int(jd[:4]), int(jd[5:7]), int(jd[8:10]))
-  elif cnd is None:
+    return JalaliDate(int(jd[:4]) , int(jd[5 :7]) , int(jd[8 :10]))
+  elif cnd is None :
     raise ValueError
 
-def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
+def persian_tools_jdate_from_int_format_jdate(jdate: {int , str}) :
   import re
+
+  import pandas as pd
   from persiantools.jdatetime import JalaliDate
 
 
   int_fmt_jd = r'1[34]\d\d[0-2]\d[0-3]\d'
 
-  if pd.isna(jdate):
+  if pd.isna(jdate) :
     return None
 
   jd = str(int(jdate))
@@ -163,16 +195,15 @@ def persian_tools_jdate_from_int_format_jdate(jdate: {int, str}):
   cnd = re.fullmatch(int_fmt_jd , jd)
 
   if cnd is not None :
-    return JalaliDate(int(jd[:4]), int(jd[4:6]), int(jd[6:8]))
-  elif cnd is None:
+    return JalaliDate(int(jd[:4]) , int(jd[4 :6]) , int(jd[6 :8]))
+  elif cnd is None :
     raise ValueError
 
-def print_df_columns_in_dict_type(df):
-  for cn in df.columns:
+def print_df_columns_in_dict_type(df) :
+  for cn in df.columns :
     print('"' + cn + '":None,')
 
-def extract_market_from_tsetmc_title(title: str):
-
+def extract_market_from_tsetmc_title(title: str) :
   import re
 
 
@@ -180,14 +211,15 @@ def extract_market_from_tsetmc_title(title: str):
   os = os.strip()
 
   ptr = r'.+-\s*([^-]*)'
-  if re.fullmatch(ptr, os):
-    return re.sub(ptr, r'\1', os).strip()
-  else:
+  if re.fullmatch(ptr , os) :
+    return re.sub(ptr , r'\1' , os).strip()
+  else :
     ptr = r'.+-\s*-\s*'
-    assert re.fullmatch(ptr,os)
+    assert re.fullmatch(ptr , os)
 
 def search_tsetmc(string) :
   import requests
+  import pandas as pd
 
 
   url = f'http://www.tsetmc.com/tsev2/data/search.aspx?skey={string}'
@@ -210,7 +242,6 @@ def search_tsetmc(string) :
       'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
       }
 
-
   rsp = requests.get(url , headers = headers)
 
   rows = rsp.text.split(';')
@@ -223,9 +254,9 @@ def search_tsetmc(string) :
     dfr = order_map.copy()
 
     for ky , vl in order_map.items() :
-      try:
+      try :
         dfr[ky] = vals[vl]
-      except IndexError:
+      except IndexError :
         dfr[ky] = None
 
     _df = pd.DataFrame(data = dfr , index = [0])
@@ -292,3 +323,9 @@ def make_zero_padded_jdate(ist , sep = '/') :
   ou = '-'.join(spl)
 
   return ou
+
+##
+
+
+##
+##
