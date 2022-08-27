@@ -292,9 +292,7 @@ def return_clusters_indices(iterable_obj , cluster_size = 100) :
   print(se_tuples)
   return se_tuples
 
-def get_title_stocks_from_overview_page_by_stock_id(tsetmc_id) :
-  import re
-
+def get_an_id_testmc_overview_page_resp(tsetmc_id):
   import requests
 
 
@@ -303,18 +301,31 @@ def get_title_stocks_from_overview_page_by_stock_id(tsetmc_id) :
       }
 
   url = f'http://www.tsetmc.com/Loader.aspx?ParTree=151311&i={tsetmc_id}'
-  r = requests.get(url , headers = hdrs)
 
-  title = re.findall(r"Title='(.+)',FaraDesc" , r.text)
-  print(title)
+  resp = requests.get(url , headers = hdrs)
 
-  if len(title) == 0 :
-    return None
+  return resp
+def get_title_stocks_from_overview_page_by_stock_id(tsetmc_id) :
+  import re
 
-  title = title[0]
-  title = title.strip()
 
-  return title
+  resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
+
+  title_list = re.findall(r"Title='(.+)',FaraDesc" , resp.text)
+  print(title_list)
+
+  return title_list
+
+def get_groupname_from_overview_page_by_stock_id(tsetmc_id):
+  import re
+
+
+  resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
+
+  gpns = re.findall(r"LSecVal='(.+)',CgrValCot" , resp.text)
+  print(gpns)
+
+  return gpns
 
 def make_zero_padded_jdate(ist , sep = '/') :
   spl = ist.split(sep)
