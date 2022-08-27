@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mirutil"
-version = "3.00"
+version = "3.1"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "Tools for getting and cleaning TSE data"
 readme = "README.md"
@@ -19,7 +19,7 @@ dependencies = [
     "aiohttp",
     "nest_asyncio",
     "githubdata",
-    "requests",]
+    "requests", ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

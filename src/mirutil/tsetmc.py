@@ -108,14 +108,23 @@ def get_an_id_testmc_overview_page_resp(tsetmc_id) :
   return requests.get(url , headers = headers)
 
 
+def get_title_fr_resp_text(resp_text):
+  return re.findall(r"Title='(.+)',FaraDesc" , resp_text)
+
+
+def get_group_name_fr_resp_text(resp_text):
+  return re.findall(r"LSecVal='(.+)',CgrValCot" , resp_text)
+
+
+
 def get_title_from_overview_page_by_stock_id(tsetmc_id) :
   resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
-  return re.findall(r"Title='(.+)',FaraDesc" , resp.text)
+  return get_title_fr_resp_text(resp.text)
 
 
 def get_groupname_from_overview_page_by_stock_id(tsetmc_id) :
   resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
-  return re.findall(r"LSecVal='(.+)',CgrValCot" , resp.text)
+  return get_group_name_fr_resp_text(resp.text)
 
 ##
 
