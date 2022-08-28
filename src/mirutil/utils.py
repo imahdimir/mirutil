@@ -9,6 +9,38 @@ from .df_utils import save_df_as_a_nice_xl as sxl
 from .namespaces import MetadataColumns
 
 
+def get_tok_if_accessible(fp) :
+  if Path(fp).exists() :
+    with open(fp , 'r') as fi :
+      return fi.read().strip()
+
+
+def return_clusters_indices(iterable_obj , cluster_size = 100) :
+  intdiv = len(iterable_obj) // cluster_size
+
+  cis = [x * cluster_size for x in range(0 , intdiv + 1)]
+
+  if len(cis) > 1 :
+    if cis[-1] != len(iterable_obj) :
+      cis.append(cis[-1] + len(iterable_obj) % cluster_size)
+  else :
+    cis = [0 , len(iterable_obj)]
+    if cis == [0 , 0] :
+      cis = [0]
+
+  cis[0] = cis[0]
+
+  se_tuples = []
+  for _i in range(len(cis) - 1) :
+    si = cis[_i]
+    ei = cis[_i + 1] - 1
+    se = (si , ei)
+    se_tuples.append(se)
+
+  print(se_tuples)
+  return se_tuples
+
+
 def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
   """
   :param fp:
@@ -45,32 +77,6 @@ def update_metadata_save_rand_sample(fp , save_rand_sample = True) -> None :
     _fp = Path(fp).with_stem('Sample').with_suffix('.xlsx')
     sxl(_df , _fp)
     print('random sample saved.')
-
-
-def return_clusters_indices(iterable_obj , cluster_size = 100) :
-  intdiv = len(iterable_obj) // cluster_size
-
-  cis = [x * cluster_size for x in range(0 , intdiv + 1)]
-
-  if len(cis) > 1 :
-    if cis[-1] != len(iterable_obj) :
-      cis.append(cis[-1] + len(iterable_obj) % cluster_size)
-  else :
-    cis = [0 , len(iterable_obj)]
-    if cis == [0 , 0] :
-      cis = [0]
-
-  cis[0] = cis[0]
-
-  se_tuples = []
-  for _i in range(len(cis) - 1) :
-    si = cis[_i]
-    ei = cis[_i + 1] - 1
-    se = (si , ei)
-    se_tuples.append(se)
-
-  print(se_tuples)
-  return se_tuples
 
 
 ##
