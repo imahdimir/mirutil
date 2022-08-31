@@ -1,6 +1,8 @@
+"""
+
+  """
+
 ##
-
-
 import re
 from functools import partial
 
@@ -14,7 +16,6 @@ headers = {
     'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
     }
 skey = 'srchkey'
-
 
 async def search_tsetmc_async(string_list) :
   urls = [make_tsetmc_srch_url(x) for x in string_list]
@@ -36,7 +37,6 @@ async def search_tsetmc_async(string_list) :
 
   return df
 
-
 def search_tsetmc_ret_df(string) :
   url = make_tsetmc_srch_url(string)
 
@@ -47,10 +47,8 @@ def search_tsetmc_ret_df(string) :
   df[skey] = string
   return df
 
-
 def make_tsetmc_srch_url(istr) :
   return f'http://www.tsetmc.com/tsev2/data/search.aspx?skey={istr}'
-
 
 def make_a_df_from_a_resp_text_tsetmc(rsp) :
   order_map = {
@@ -86,7 +84,6 @@ def make_a_df_from_a_resp_text_tsetmc(rsp) :
     df = pd.concat([df , _df] , ignore_index = True)
   return df
 
-
 def extract_market_from_tsetmc_title(title: str) :
   os = title.replace("',FaraDesc ='" , ' ')
   os = os.strip()
@@ -98,29 +95,22 @@ def extract_market_from_tsetmc_title(title: str) :
     ptr = r'.+-\s*-\s*'
     assert re.fullmatch(ptr , os)
 
-
 def make_tsetmc_overview_pg_url_with_testmc_id(tsetmc_id) :
   return f'http://www.tsetmc.com/Loader.aspx?ParTree=151311&i={tsetmc_id}'
-
 
 def get_an_id_testmc_overview_page_resp(tsetmc_id) :
   url = make_tsetmc_overview_pg_url_with_testmc_id(tsetmc_id)
   return requests.get(url , headers = headers)
 
-
-def get_title_fr_resp_text(resp_text):
+def get_title_fr_resp_text(resp_text) :
   return re.findall(r"Title='(.+)',FaraDesc" , resp_text)
 
-
-def get_group_name_fr_resp_text(resp_text):
+def get_group_name_fr_resp_text(resp_text) :
   return re.findall(r"LSecVal='(.+)',CgrValCot" , resp_text)
-
-
 
 def get_title_from_overview_page_by_stock_id(tsetmc_id) :
   resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
   return get_title_fr_resp_text(resp.text)
-
 
 def get_groupname_from_overview_page_by_stock_id(tsetmc_id) :
   resp = get_an_id_testmc_overview_page_resp(tsetmc_id)
