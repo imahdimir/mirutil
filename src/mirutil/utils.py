@@ -2,12 +2,7 @@
 
   """
 
-import json
 from pathlib import Path
-
-from .df_utils import read_data_according_to_type
-from .df_utils import save_df_as_a_nice_xl as sxl
-from .namespaces import MetadataColumns
 
 
 def get_tok_if_accessible(fp) :
@@ -40,39 +35,20 @@ def return_clusters_indices(iterable , cluster_size = 100) :
     print(se_tuples)
     return se_tuples
 
-def update_metadata_save_rand_sample(fp , save_rand_sample = True) :
+def list_all_files_recursively(root_dir) :
     """
-    :param fp:
-    :param save_rand_sample:
+    :param root_dir:
     :return:
     """
-    cns = MetadataColumns()
+    import os
 
-    dirpth = Path(fp).parent
-    metafp = dirpth / 'META.json'
-    if not metafp.exists() :
-        return None
+    all_files = []
+    for root , dirs , files in os.walk(root_dir) :
+        for file in files :
+            all_files.append(os.path.join(root , file))
 
-    with open(metafp) as fi :
-        meta = json.load(fi)
+    return all_files
 
-    df = read_data_according_to_type(fp)
-
-    if cns.startendcol in meta.keys() :
-        if meta[cns.startendcol] is not None :
-            meta[cns.start] = df[meta[cns.startendcol]].min()
-            meta[cns.end] = df[meta[cns.startendcol]].max()
-
-    meta[cns.numrow] = len(df)
-    meta[cns.numcol] = len(df.columns)
-    meta[cns.colnames] = list(df.columns)
-
-    with open(metafp , 'w' , encoding = 'utf-8') as fi :
-        json.dump(meta , fi , ensure_ascii = False)
-        print("Meta updated.")
-
-    if save_rand_sample and len(df) > 1000 :
-        _df = df.sample(n = 1000)
-        _fp = Path(fp).with_stem('Sample').with_suffix('.xlsx')
-        sxl(_df , _fp)
-        print('random sample saved.')
+def print_list_as_dict_fmt(lst) :
+    for item in lst :
+        print('"' + item + '":None,')

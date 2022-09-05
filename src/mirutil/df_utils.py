@@ -1,5 +1,6 @@
-##
+"""
 
+    """
 
 from pathlib import Path
 
@@ -11,7 +12,7 @@ def save_df_as_a_nice_xl(df ,
                          fpn ,
                          index: bool = False ,
                          header: bool = True ,
-                         max_col_length: int = 40) :
+                         max_col_length: int = 40) -> None :
     df.to_excel(fpn , index = False)
 
     wb = pyxl.load_workbook(fpn)
@@ -37,7 +38,7 @@ def save_as_prq_wo_index(df , fpn) -> None :
     df.to_parquet(fpn , index = False)
     print(f'dataframe saved as {fpn} without index')
 
-def read_data_according_to_type(fpn) :
+def read_data_according_to_type(fpn) -> pd.DataFrame :
     suf = Path(fpn).suffix
     if suf == '.xlsx' :
         return pd.read_excel(fpn)
@@ -45,7 +46,3 @@ def read_data_according_to_type(fpn) :
         return pd.read_parquet(fpn)
     elif suf == '.csv' :
         return pd.read_csv(fpn)
-
-def print_df_columns_in_dict_fmt(df) :
-    for cn in df.columns :
-        print('"' + cn + '":None,')
