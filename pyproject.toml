@@ -22,7 +22,8 @@ dependencies = [
     "requests",
     "lxml",
     "html5lib",
-    "tabulate"]
+    "tabulate",
+    "pip"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
