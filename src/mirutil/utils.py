@@ -35,8 +35,7 @@ def ret_clusters_indices(iterable , cluster_size = 100) :
     prt = se_tuples[0 :3]
     _ = [print(x) for x in prt]
 
-    print('..' , end = '')
-    print('.')
+    print('..')
 
     prt = se_tuples[-2 :]
     _ = [print(x) for x in prt]
