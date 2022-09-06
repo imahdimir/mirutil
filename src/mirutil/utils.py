@@ -32,9 +32,11 @@ def ret_clusters_indices(iterable , cluster_size = 100) :
         se = (si , ei)
         se_tuples.append(se)
 
-    prt = se_tuples[0 :3] + se_tuples[-2 :]
-    for el in prt :
-        print(el)
+    prt = se_tuples[0 :3]
+    _ = [print(x) for x in prt]
+    print('...')
+    prt = se_tuples[-2 :]
+    _ = [print(x) for x in prt]
     return se_tuples
 
 def list_all_files_recursively_in_all_subdirs(root_dir) :
