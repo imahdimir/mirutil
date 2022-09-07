@@ -5,7 +5,7 @@
 def ret_clusters_indices(iterable , cluster_size = 100) :
     """ clusters the iterable into clusters of size cluster_size
         and returns the start and end indices of each cluster
-        in a list of tuples
+        in a list of tuples of start and end indices
 
     :param iterable: the iterable to be clustered
     :param cluster_size: the size of each cluster
@@ -23,13 +23,9 @@ def ret_clusters_indices(iterable , cluster_size = 100) :
         if cis == [0 , 0] :
             cis = [0]
 
-    cis[0] = cis[0]
-
     se_tuples = []
     for _i in range(len(cis) - 1) :
-        si = cis[_i]
-        ei = cis[_i + 1] - 1
-        se = (si , ei)
+        se = (cis[_i] , cis[_i + 1])
         se_tuples.append(se)
 
     prt = se_tuples[0 :3]
