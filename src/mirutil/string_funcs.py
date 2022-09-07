@@ -25,8 +25,8 @@ def rm_odd_chars(istr) :
             r'\u200f' : '' ,
             }
     os = istr
-    for ptr , rep in repmap.items() :
-        os = re.sub(ptr , rep , istr)
+    for ky , vl in repmap.items() :
+        os = os.replace(ky , vl)
     return os
 
 def strip_and_rm_successive_spaces(istr) :
