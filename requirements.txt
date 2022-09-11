@@ -1,0 +1,4 @@
+numpy~=1.23.3
+persiantools~=3.0.1
+pytz
+IPython

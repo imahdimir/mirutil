@@ -3,7 +3,10 @@
   """
 
 import re
+from datetime import datetime as dt
+from datetime import time
 
+from numpy import vectorize
 from persiantools.jdatetime import JalaliDate
 
 
@@ -28,3 +31,20 @@ def make_zero_padded_jdate_ie_iso_fmt(ist , sep = '/') :
             spl[_i] = '0' + spl[_i]
     ou = '-'.join(spl)
     return ou
+
+def make_datetime_from_iso_jdate_time(ist) :
+    ptr = r'(\d{4})-(\d{2})-(\d{2})(\s*T?\s*)(\d{2}):(\d{2}):(\d{2})'
+    cnd = re.fullmatch(ptr , ist)
+    if cnd is None :
+        raise ValueError
+
+    jd = JalaliDate(int(cnd.group(1)) , int(cnd.group(2)) , int(cnd.group(3)))
+    date = jd.to_gregorian()
+
+    t = time(int(cnd.group(5)) , int(cnd.group(6)) , int(cnd.group(7)))
+
+    date_time = dt.combine(date , t)
+    return date_time
+
+fu0 = make_datetime_from_iso_jdate_time
+vect_make_datetime_from_iso_jdate_time = vectorize(fu0)
