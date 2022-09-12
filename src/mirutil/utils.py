@@ -37,20 +37,6 @@ def ret_clusters_indices(iterable , cluster_size = 100) :
     _ = [print(x) for x in prt]
     return se_tuples
 
-def list_all_files_recursively_in_all_subdirs(root_dir) :
-    """ lists all files in all subdirectories of the root_dir
-
-    :param root_dir: the root to start the search from
-    :return: list of pathes to all files in all subdirectories of the root_dir
-    """
-    import os
-
-    all_files = []
-    for root , dirs , files in os.walk(root_dir) :
-        for file in files :
-            all_files.append(os.path.join(root , file))
-    return all_files
-
 def print_list_as_dict_fmt(lst) :
     """ prints the list as a dictionary format with the elements as keys"""
     for item in lst :
