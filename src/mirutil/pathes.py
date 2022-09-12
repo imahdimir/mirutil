@@ -20,3 +20,9 @@ def list_all_files_recursively_in_all_subdirs(root_dir) :
     for d in all_subdirs :
         all_files.extend(list(d.glob('*')))
     return all_files
+
+def has_subdir(dirp: Path) :
+    for el in dirp.iterdir() :
+        if el.is_dir() :
+            return True
+    return False
