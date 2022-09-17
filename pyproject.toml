@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mirutil"
-version = "4.11"
+version = "5.0"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "Tools for getting and cleaning TSE data"
 readme = "README.md"
@@ -23,7 +23,8 @@ dependencies = [
     "lxml",
     "html5lib",
     "tabulate",
-    "pip"]
+    "pip",
+    "gitignore_parser"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
