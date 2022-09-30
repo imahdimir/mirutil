@@ -44,6 +44,8 @@ def ret_ns_module_code() :
             gj = json.load(f)
             py += make_class_code_str_fr_dict(k , gj)
         py += '\n'
+
+    gds.rmdir()
     return py
 
 def make_class_code_str_fr_dict(class_name , dct , indent_s_n = 4) :
