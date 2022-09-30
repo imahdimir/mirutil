@@ -20,10 +20,10 @@ async def get_a_resp_text_async(url ,
                                 timeout) :
     async with ClientSession(trust_env = trust_env) as ses :
         async with ses.get(url ,
-                params = params ,
-                headers = headers ,
-                verify_ssl = verify_ssl ,
-                timeout = timeout) as resp :
+                           params = params ,
+                           headers = headers ,
+                           verify_ssl = verify_ssl ,
+                           timeout = timeout) as resp :
             if resp.status == 200 :
                 return await resp.text()
 
@@ -34,11 +34,11 @@ async def get_reps_texts_async(urls ,
                                verify_ssl = True ,
                                timeout = None) :
     fu = partial(get_a_resp_text_async ,
-            trust_env = trust_env ,
-            params = params ,
-            headers = headers ,
-            verify_ssl = verify_ssl ,
-            timeout = timeout)
+                 trust_env = trust_env ,
+                 params = params ,
+                 headers = headers ,
+                 verify_ssl = verify_ssl ,
+                 timeout = timeout)
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
@@ -51,8 +51,8 @@ async def get_a_resp_json_async(url ,
                                 content_type) :
     async with ClientSession(trust_env = trust_env) as ses :
         async with ses.get(url ,
-                params = params ,
-                verify_ssl = verify_ssl) as resp :
+                           params = params ,
+                           verify_ssl = verify_ssl) as resp :
             if resp.status == 200 :
                 return await resp.json(content_type = content_type)
 
@@ -62,10 +62,10 @@ async def get_reps_jsons_async(urls ,
                                verify_ssl = True ,
                                content_type = None) :
     fu = partial(get_a_resp_json_async ,
-            trust_env = trust_env ,
-            params = params ,
-            verify_ssl = verify_ssl ,
-            content_type = content_type)
+                 trust_env = trust_env ,
+                 params = params ,
+                 verify_ssl = verify_ssl ,
+                 content_type = content_type)
 
     co_tasks = [fu(x) for x in urls]
 
