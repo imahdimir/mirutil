@@ -19,12 +19,10 @@ skey = 'srchkey'
 async def search_tsetmc_async(string_list) :
     urls = [make_tsetmc_srch_url(x) for x in string_list]
 
-    fu = partial(
-            get_reps_texts_async ,
+    fu = partial(get_reps_texts_async ,
             trust_env = False ,
             params = None ,
-            verify_ssl = True
-            )
+            verify_ssl = True)
 
     resps = await fu(urls)
 
