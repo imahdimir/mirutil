@@ -9,8 +9,9 @@ import nest_asyncio
 from aiohttp import ClientSession
 from lxml.etree import XMLSyntaxError
 from requests_html import AsyncHTMLSession
+from pyppeteer.errors import TimeoutError
 
-from src.mirutil.utils import write_txt_to_file_async
+from .utils import write_txt_to_file_async
 
 
 ases = AsyncHTMLSession()
@@ -86,13 +87,14 @@ async def render_js_async(url) :
     try :
         await r.html.arender()
         return r.html.html
-    except XMLSyntaxError as e :
+    except (XMLSyntaxError , TimeoutError) as e :
         print(e)
-        return ""
+        return
 
 async def get_a_rendered_html_and_save(url , fp) :
     txt = await render_js_async(url)
-    await write_txt_to_file_async(txt , fp)
+    if txt :
+        await write_txt_to_file_async(txt , fp)
 
 async def get_rendered_htmls_and_save(urls , fps) :
     fu = get_a_rendered_html_and_save
