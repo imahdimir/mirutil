@@ -7,7 +7,13 @@ from functools import partial
 
 import nest_asyncio
 from aiohttp import ClientSession
+from lxml.etree import XMLSyntaxError
+from requests_html import AsyncHTMLSession
 
+from src.mirutil.utils import write_txt_to_file_async
+
+
+ases = AsyncHTMLSession()
 
 nest_asyncio.apply()
 
@@ -43,7 +49,6 @@ async def get_reps_texts_async(urls ,
     return await asyncio.gather(*co_tasks)
 
 # getting resp json async funcs
-
 async def get_a_resp_json_async(url ,
                                 headers ,
                                 trust_env ,
@@ -73,4 +78,23 @@ async def get_reps_jsons_async(urls ,
 
     co_tasks = [fu(x) for x in urls]
 
+    return await asyncio.gather(*co_tasks)
+
+# getting & saving rendered Htmls async funcs
+async def render_js_async(url) :
+    r = await ases.get(url , verify = False)
+    try :
+        await r.html.arender()
+        return r.html.html
+    except XMLSyntaxError as e :
+        print(e)
+        return ""
+
+async def get_a_rendered_html_and_save(url , fp) :
+    txt = await render_js_async(url)
+    await write_txt_to_file_async(txt , fp)
+
+async def get_rendered_htmls_and_save(urls , fps) :
+    fu = get_a_rendered_html_and_save
+    co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
     return await asyncio.gather(*co_tasks)

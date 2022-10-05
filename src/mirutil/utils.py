@@ -41,3 +41,7 @@ def print_list_as_dict_fmt(lst) :
     """ prints the list as a dictionary format with the elements as keys"""
     for item in lst :
         print('"' + item + '" : None ,')
+
+async def write_txt_to_file_async(txt , fp) :
+    with open(fp , "w") as file :
+        file.write(txt)
