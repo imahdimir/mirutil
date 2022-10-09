@@ -22,13 +22,35 @@ nest_asyncio.apply()
 cte = Const()
 
 
-async def _get_req_async(url , headers = cte.headers , params = None) :
-    async with ClientSession() as s :
-        return await s.get(url , headers = headers , params = params)
+async def _get_req_async(url ,
+                         headers = cte.headers ,
+                         params = None ,
+                         trust_env = False ,
+                         verify_ssl = True ,
+                         timeout = None) :
+
+    async with ClientSession(trust_env = trust_env) as s :
+        return await s.get(url ,
+                           headers = headers ,
+                           params = params ,
+                           verify_ssl = verify_ssl ,
+                           timeout = timeout)
 
 
-async def get_reqs_async(urls , headers = cte.headers , params = None) :
-    fu = partial(_get_req_async , headers = headers , params = params)
+async def get_reqs_async(urls ,
+                         headers = cte.headers ,
+                         params = None ,
+                         trust_env = False ,
+                         verify_ssl = True ,
+                         timeout = None) :
+
+    fu = partial(_get_req_async ,
+                 headers = headers ,
+                 params = params ,
+                 trust_env = trust_env ,
+                 verify_ssl = verify_ssl ,
+                 timeout = timeout)
+
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
