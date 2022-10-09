@@ -10,6 +10,7 @@ from aiohttp import ClientSession
 from lxml.etree import XMLSyntaxError
 from requests_html import AsyncHTMLSession
 from pyppeteer.errors import TimeoutError
+from aiohttp.client_exceptions import ClientConnectorError
 
 from .utils import write_txt_to_file_async
 from .const import Const
@@ -30,11 +31,15 @@ async def _get_req_async(url ,
                          timeout = None) :
 
     async with ClientSession(trust_env = trust_env) as s :
-        return await s.get(url ,
-                           headers = headers ,
-                           params = params ,
-                           verify_ssl = verify_ssl ,
-                           timeout = timeout)
+        try :
+            return await s.get(url ,
+                               headers = headers ,
+                               params = params ,
+                               verify_ssl = verify_ssl ,
+                               timeout = timeout)
+        except ClientConnectorError as e :
+            print(e)
+            return e
 
 
 async def get_reqs_async(urls ,
