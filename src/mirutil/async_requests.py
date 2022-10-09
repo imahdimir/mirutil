@@ -12,11 +12,26 @@ from requests_html import AsyncHTMLSession
 from pyppeteer.errors import TimeoutError
 
 from .utils import write_txt_to_file_async
+from .const import Const
 
 
 ases = AsyncHTMLSession()
 
 nest_asyncio.apply()
+
+cte = Const()
+
+
+async def _get_req_async(url , headers = cte.headers , params = None) :
+    async with ClientSession() as s :
+        return await s.get(url , headers = headers , params = params)
+
+
+async def get_reqs_async(urls , headers = cte.headers , params = None) :
+    fu = partial(_get_req_async , headers = headers , params = params)
+    co_tasks = [fu(x) for x in urls]
+    return await asyncio.gather(*co_tasks)
+
 
 # getting resp text async funcs
 async def get_a_resp_text_async(url ,
@@ -34,6 +49,7 @@ async def get_a_resp_text_async(url ,
             if resp.status == 200 :
                 return await resp.text()
 
+
 async def get_reps_texts_async(urls ,
                                headers = None ,
                                trust_env = False ,
@@ -49,6 +65,7 @@ async def get_reps_texts_async(urls ,
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
+
 # getting resp json async funcs
 async def get_a_resp_json_async(url ,
                                 headers ,
@@ -63,6 +80,7 @@ async def get_a_resp_json_async(url ,
                            verify_ssl = verify_ssl) as resp :
             if resp.status == 200 :
                 return await resp.json(content_type = content_type)
+
 
 async def get_reps_jsons_async(urls ,
                                headers = None ,
@@ -81,6 +99,7 @@ async def get_reps_jsons_async(urls ,
 
     return await asyncio.gather(*co_tasks)
 
+
 # getting & saving rendered Htmls async funcs
 async def render_js_async(url) :
     r = await ases.get(url , verify = False)
@@ -91,10 +110,12 @@ async def render_js_async(url) :
         print(e)
         return
 
+
 async def get_a_rendered_html_and_save(url , fp) :
     txt = await render_js_async(url)
     if txt :
         await write_txt_to_file_async(txt , fp)
+
 
 async def get_rendered_htmls_and_save(urls , fps) :
     fu = get_a_rendered_html_and_save
