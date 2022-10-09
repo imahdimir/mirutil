@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mirutil"
-version = "9.1"
+version = "9.2"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "Tools for getting and cleaning TSE data"
 readme = "README.md"
