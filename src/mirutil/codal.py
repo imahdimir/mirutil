@@ -3,20 +3,23 @@
     """
 
 import re
+from dataclasses import dataclass
 
 
-def find_fn_and_suf_fr_codal_get_resp(r) :
-    hdr = r.headers
-    cd = hdr["Content-Disposition"]
+@dataclass
+class RFindFn :
+    fn: (str , None)
+    suf: (str , None)
+
+
+def find_fn_and_suf_fr_codal_get_resp(r_header) :
+    cd = r_header["Content-Disposition"]
 
     pat = 'filename=(.+)\.(\w+)'
     rf = re.findall(pat , cd)
     if len(rf) == 0 :
-        return
+        return RFindFn(None , None)
 
-    g0 = rf[0]
-    fn , suf = g0
-    return {
-            "fn"  : fn ,
-            "suf" : suf
-            }
+    g = rf[0]
+
+    return RFindFn(fn = g[0] , suf = g[1])
