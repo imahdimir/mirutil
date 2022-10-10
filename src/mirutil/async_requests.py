@@ -27,6 +27,7 @@ cte = Const()
 @dataclass
 class Res :
     status: int
+    headers: dict
     cnt: (bytes , None)
 
 
@@ -46,11 +47,13 @@ async def _get_req_async(url ,
                             verify_ssl = verify_ssl ,
                             timeout = timeout)
 
-            return Res(status = r.status , cnt = await r.read())
+            return Res(status = r.status ,
+                       headers = r.headers ,
+                       cnt = await r.read())
 
         except ClientConnectorError as e :
             print(e)
-            return Res(status = r.status , cnt = None)
+            return Res(status = r.status , headers = r.headers , cnt = None)
 
 
 async def get_reqs_async(urls ,
