@@ -3,6 +3,7 @@
     """
 
 import asyncio
+from dataclasses import dataclass
 from functools import partial
 
 import nest_asyncio
@@ -23,6 +24,12 @@ nest_asyncio.apply()
 cte = Const()
 
 
+@dataclass
+class Res :
+    status: int
+    cnt: (bytes , None)
+
+
 async def _get_req_async(url ,
                          headers = cte.headers ,
                          params = None ,
@@ -31,15 +38,19 @@ async def _get_req_async(url ,
                          timeout = None) :
 
     async with ClientSession(trust_env = trust_env) as s :
+
         try :
-            return await s.get(url ,
-                               headers = headers ,
-                               params = params ,
-                               verify_ssl = verify_ssl ,
-                               timeout = timeout)
+            r = await s.get(url ,
+                            headers = headers ,
+                            params = params ,
+                            verify_ssl = verify_ssl ,
+                            timeout = timeout)
+
+            return Res(status = r.status , cnt = await r.read())
+
         except ClientConnectorError as e :
             print(e)
-            return e
+            return Res(status = r.status , cnt = None)
 
 
 async def get_reqs_async(urls ,
@@ -60,7 +71,7 @@ async def get_reqs_async(urls ,
     return await asyncio.gather(*co_tasks)
 
 
-# getting resp text async funcs
+# getting resp cnt async funcs
 async def get_a_resp_text_async(url ,
                                 headers ,
                                 trust_env ,
@@ -74,7 +85,7 @@ async def get_a_resp_text_async(url ,
                            verify_ssl = verify_ssl ,
                            timeout = timeout) as resp :
             if resp.status == 200 :
-                return await resp.text()
+                return await resp.cnt()
 
 
 async def get_reps_texts_async(urls ,
