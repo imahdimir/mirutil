@@ -17,15 +17,13 @@ from .utils import write_txt_to_file_async
 from .const import Const
 
 
-ases = AsyncHTMLSession()
-
 nest_asyncio.apply()
 
 cte = Const()
 
 
 @dataclass
-class Res :
+class RGetReqAsync :
     status: int
     headers: dict
     cnt: (bytes , None)
@@ -47,13 +45,15 @@ async def _get_req_async(url ,
                             verify_ssl = verify_ssl ,
                             timeout = timeout)
 
-            return Res(status = r.status ,
-                       headers = r.headers ,
-                       cnt = await r.read())
+            return RGetReqAsync(status = r.status ,
+                                headers = r.headers ,
+                                cnt = await r.read())
 
         except ClientConnectorError as e :
             print(e)
-            return Res(status = r.status , headers = r.headers , cnt = None)
+            return RGetReqAsync(status = r.status ,
+                                headers = r.headers ,
+                                cnt = None)
 
 
 async def get_reqs_async(urls ,
@@ -142,23 +142,66 @@ async def get_reps_jsons_async(urls ,
 
 
 # getting & saving rendered Htmls async funcs
-async def render_js_async(url) :
-    r = await ases.get(url , verify = False)
+
+@dataclass
+class RGetAndRender :
+    status: int
+    headers: dict
+    html: (str , None)
+
+
+async def get_and_render_js_by_requests_html_async(url ,
+                                                   headers = cte.headers ,
+                                                   params = None ,
+                                                   verify = True ,
+                                                   timeout = None) :
+    ret = RGetAndRender
+
+    asess = AsyncHTMLSession()
+
+    r = await asess.get(url ,
+                        headers = headers ,
+                        params = params ,
+                        verify = verify ,
+                        timeout = timeout)
     try :
         await r.html.arender()
-        return r.html.html
+        return ret(status = r.status , headers = r.headers , html = r.html.html)
+
     except (XMLSyntaxError , TimeoutError) as e :
         print(e)
-        return
+        return ret(status = 400 , headers = r.headers , html = None)
 
 
-async def get_a_rendered_html_and_save(url , fp) :
-    txt = await render_js_async(url)
-    if txt :
-        await write_txt_to_file_async(txt , fp)
+async def get_a_rendered_html_and_save_async(url ,
+                                             fp ,
+                                             headers = cte.headers ,
+                                             params = None ,
+                                             verify = True ,
+                                             timeout = None) :
+    fu = get_and_render_js_by_requests_html_async
+    ou = await fu(url ,
+                  headers = headers ,
+                  params = params ,
+                  verify = verify ,
+                  timeout = timeout)
+
+    outer_html = ou.html
+    if outer_html :
+        await write_txt_to_file_async(outer_html , fp)
 
 
-async def get_rendered_htmls_and_save(urls , fps) :
-    fu = get_a_rendered_html_and_save
+async def get_rendered_htmls_and_save_async(urls ,
+                                            fps ,
+                                            headers = cte.headers ,
+                                            params = None ,
+                                            verify = True ,
+                                            timeout = None) :
+    fu = partial(get_a_rendered_html_and_save_async ,
+                 headers = headers ,
+                 params = params ,
+                 verify = verify ,
+                 timeout = timeout)
+
     co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
     return await asyncio.gather(*co_tasks)
