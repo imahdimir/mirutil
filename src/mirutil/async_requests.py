@@ -157,20 +157,23 @@ async def get_and_render_js_by_requests_html_async(url ,
                                                    timeout = None) :
     ret = RGetAndRender
 
-    asess = AsyncHTMLSession()
+    ses = AsyncHTMLSession()
 
-    r = await asess.get(url ,
-                        headers = headers ,
-                        params = params ,
-                        verify = verify ,
-                        timeout = timeout)
+    r = await ses.get(url ,
+                      headers = headers ,
+                      params = params ,
+                      verify = verify ,
+                      timeout = timeout)
+
     try :
         await r.html.arender()
-        return ret(status = r.status , headers = r.headers , html = r.html.html)
+        return ret(status = r.status_code ,
+                   headers = r.headers ,
+                   html = r.html.html)
 
     except (XMLSyntaxError , TimeoutError) as e :
         print(e)
-        return ret(status = 400 , headers = r.headers , html = None)
+        return ret(status = r.status_code , headers = r.headers , html = None)
 
 
 async def get_a_rendered_html_and_save_async(url ,
