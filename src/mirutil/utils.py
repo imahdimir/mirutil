@@ -52,7 +52,7 @@ async def write_txt_to_file_async(txt , fp) :
 
 def contains_any_of_list(container , lst) :
     """ returns True if any of the elements of lst is in container. """
-    for item in container :
-        if item in lst :
+    for el in lst :
+        if el in container :
             return True
     return False
