@@ -48,7 +48,3 @@ def read_data_according_to_type(fpn) -> pd.DataFrame :
         return pd.read_parquet(fpn)
     elif suf == '.csv' :
         return pd.read_csv(fpn)
-
-
-def are_df_pair_equal(df1 , df2) -> bool :
-    return df1.eq(df2).all(axis = None)
