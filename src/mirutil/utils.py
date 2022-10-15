@@ -2,6 +2,7 @@
 
   """
 
+
 def ret_clusters_indices(iterable , cluster_size = 100) :
     """ clusters the iterable into clusters of size cluster_size
         and returns the start and end indices of each cluster
@@ -37,11 +38,21 @@ def ret_clusters_indices(iterable , cluster_size = 100) :
     _ = [print(x) for x in prt]
     return se_tuples
 
+
 def print_list_as_dict_fmt(lst) :
     """ prints the list as a dictionary format with the elements as keys"""
     for item in lst :
         print('"' + item + '" : None ,')
 
+
 async def write_txt_to_file_async(txt , fp) :
     with open(fp , "w") as file :
         file.write(txt)
+
+
+def contains_any_of_list(container , lst) :
+    """ returns True if any of the elements of lst is in container. """
+    for item in container :
+        if item in lst :
+            return True
+    return False
