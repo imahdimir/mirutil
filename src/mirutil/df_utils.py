@@ -48,3 +48,17 @@ def read_data_according_to_type(fpn) -> pd.DataFrame :
         return pd.read_parquet(fpn)
     elif suf == '.csv' :
         return pd.read_csv(fpn)
+
+
+def has_extra_data(df , df1) -> bool :
+    df = df.convert_dtypes()
+    df1 = df1.convert_dtypes()
+
+    df = df.astype('string')
+    df1 = df1.astype('string')
+
+    _df = pd.concat([df , df1])
+
+    _df = _df.drop_duplicates()
+
+    return not df.equals(_df)
