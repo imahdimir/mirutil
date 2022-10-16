@@ -6,6 +6,7 @@ from pathlib import Path
 
 import openpyxl as pyxl
 import pandas as pd
+from itertools import product
 
 
 def save_df_as_a_nice_xl(df ,
@@ -62,3 +63,29 @@ def has_extra_data(df , df1) -> bool :
     _df = _df.drop_duplicates()
 
     return not df.equals(_df)
+
+
+def drop_dup_and_sub_dfs(dfs_list: list) -> list :
+    dfs1 = [(i , df) for i , df in enumerate(dfs_list)]
+
+    pr = product(dfs_list , dfs1)
+    pr = list(pr)
+
+    df = pd.DataFrame(pr , columns = [0 , 1])
+
+    df[2] = df[1].apply(lambda x : x[0])
+    df[1] = df[1].apply(lambda x : x[1])
+
+    ms = df.apply(lambda x : x[0].equals(x[1]) , axis = 1)
+    df = df[~ ms]
+
+    df[3] = df.apply(lambda x : has_extra_data(x[0] , x[1]) , axis = 1)
+
+    df[4] = df.groupby(2)[3].transform('all')
+
+    ms = df[4]
+    df = df[ms]
+
+    df = df.drop_duplicates(subset = 2)
+
+    return df[1].to_list()
