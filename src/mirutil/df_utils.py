@@ -66,6 +66,11 @@ def has_extra_data(df , df1) -> bool :
 
 
 def drop_dup_and_sub_dfs(dfs_list: list) -> list :
+    """
+
+    assumption: len(dfs_list) >= 2
+    """
+
     dfs1 = [(i , df) for i , df in enumerate(dfs_list)]
 
     pr = product(dfs_list , dfs1)
