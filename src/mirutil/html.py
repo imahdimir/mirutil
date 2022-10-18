@@ -4,6 +4,7 @@
 
 from lxml import etree
 from html_table_parser import HTMLTableParser
+import pandas as pd
 
 
 hdn_xpth = {
@@ -38,4 +39,5 @@ def etree_to_html(tree: etree) -> str :
 def read_tables_in_html_by_html_table_parser(html: str) -> list :
     p = HTMLTableParser()
     p.feed(html)
-    return p.tables
+    dfs = [pd.DataFrame(x) for x in p.tables]
+    return dfs
