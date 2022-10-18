@@ -2,16 +2,18 @@
 
     """
 
-import json
 from pathlib import Path
 
 import githubdata as gd
 
+from .files import read_json_file
+from .files import write_txt_to_file
 
-class Constant :
+
+class Const :
     ns_repo_url = 'https://github.com/imahdimir/ns'
 
-cte = Constant()
+cte = Const()
 
 def update_ns_module() :
     py = ''
@@ -22,30 +24,30 @@ def update_ns_module() :
     if Path('ns.json').exists() :
         py += ret_ns_module_code()
 
-    with open('ns.py' , 'w') as f :
-        f.write(py)
+    write_txt_to_file(py , 'ns.py')
 
 def ret_gdu_module_code() :
-    with open('gdu.json' , 'r') as f :
-        gj = json.load(f)
+    gj = read_json_file('gdu.json')
     return make_class_code_str_fr_dict('GDU' , gj)
+
+def read_local_ns_json() :
+    return read_json_file('ns.json')
 
 def ret_ns_module_code() :
     gds = gd.GithubData(cte.ns_repo_url)
     gds.overwriting_clone()
 
-    with open('ns.json' , 'r') as f :
-        ns = json.load(f)
+    ns = read_local_ns_json()
 
     py = ''
     for k , v in ns.items() :
         jsp = gds.local_path / f'{v}.json'
-        with open(jsp , 'r') as f :
-            gj = json.load(f)
-            py += make_class_code_str_fr_dict(k , gj)
+        gj = read_json_file(jsp)
+        py += make_class_code_str_fr_dict(k , gj)
         py += '\n'
 
     gds.rmdir()
+
     return py
 
 def make_class_code_str_fr_dict(class_name , dct , indent_s_n = 4) :
@@ -65,8 +67,7 @@ def make_ns_classes_instances() :
     gds = gd.GithubData(cte.ns_repo_url)
     gds.overwriting_clone()
 
-    with open('ns.json' , 'r') as f :
-        ns = json.load(f)
+    ns = read_local_ns_json()
 
     o = {}
     for k , v in ns.items() :
@@ -79,16 +80,15 @@ def make_ns_classes_instances() :
 
 def make_class_fr_dict(dct) :
     class TheClass :
+
         def __init__(self) :
             for k , v in dct.items() :
                 setattr(self , k , v)
 
-
     return TheClass
 
 def make_class_fr_json_file(json_fp) :
-    with open(json_fp , 'r') as f :
-        dct = json.load(f)
+    dct = read_json_file(json_fp)
     return make_class_fr_dict(dct)
 
 def make_class_instance_fr_json_file(json_fp) :

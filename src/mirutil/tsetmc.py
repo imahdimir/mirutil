@@ -8,7 +8,7 @@ from functools import partial
 import pandas as pd
 import requests
 
-from .async_requests import get_reps_texts_async
+from .async_req import get_texts_async
 
 
 headers = {
@@ -19,7 +19,7 @@ skey = 'srchkey'
 async def search_tsetmc_async(string_list) :
     urls = [make_tsetmc_srch_url(x) for x in string_list]
 
-    fu = partial(get_reps_texts_async ,
+    fu = partial(get_texts_async ,
                  trust_env = False ,
                  params = None ,
                  verify_ssl = True)

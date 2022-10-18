@@ -6,8 +6,8 @@ import asyncio
 
 import requests
 
-from src.mirutil.async_requests import _get_req_async
-from src.mirutil.async_requests import get_and_render_js_by_requests_html_async as grj
+from src.mirutil.async_req import _get_req_async
+from src.mirutil.async_req import get_and_render_js_by_requests_html_async as grj
 
 
 ##
