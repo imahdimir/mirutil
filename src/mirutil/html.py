@@ -3,6 +3,7 @@
     """
 
 from lxml import etree
+from html_table_parser import HTMLTableParser
 
 
 hdn_xpth = {
@@ -33,3 +34,8 @@ def parse_html_as_etree(html: str) -> etree :
 
 def etree_to_html(tree: etree) -> str :
     return etree.tostring(tree , encoding = "unicode" , method = "html")
+
+def read_tables_in_html_by_html_table_parser(html: str) -> list :
+    p = HTMLTableParser()
+    p.feed(html)
+    return p.tables
