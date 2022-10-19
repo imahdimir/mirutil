@@ -50,12 +50,19 @@ fu0 = make_datetime_from_iso_jdate_time
 vect_make_datetime_from_iso_jdate_time = vectorize(fu0)
 
 def find_jmonth_fr_persian_col_in_df(df , targ_col , new_col , sep = '/') :
-    pat = r'(1[34]\d{2}' + sep + '\d{2}' + sep + '\d{2})'
-    cl = new_col
-    df[cl] = df[targ_col].str.extract(pat)
-    df[cl] = df[cl].str.replace('\D' , '')
-    df[cl] = df[cl].str[:6]
-    df[cl] = df[cl].astype(int)
-    df[cl] = df[cl].astype('string')
-    df[cl] = df[cl].str[:4] + '-' + df[cl].str[4 :6]
+    pat = r'(1[34]\d{2}' + sep + r'\d{2}' + sep + r'\d{2})'
+    pat = re.escape(pat)
+
+    msk = df[targ_col].notna()
+    _df = df[msk]
+
+    s = _df[targ_col].astype(str)
+    s = s.str.extract(pat)
+    s = s.str.replace('\D' , '')
+    s = s.str[:6]
+    s = s.astype(int)
+    s = s.astype('string')
+    s = s.str[:4] + '-' + s.str[4 :6]
+
+    df.loc[msk , new_col] = s
     return df
