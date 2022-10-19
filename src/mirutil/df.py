@@ -99,6 +99,8 @@ def find_all_df_locs_eq_val(df: pd.DataFrame , val) -> pd.MultiIndex :
 
 def ret_north_west_of_multiindex(mi: pd.MultiIndex) :
     df = mi.to_frame()
+    if df.empty :
+        return
     df = df.sort_values(by = [0 , 1] , ascending = False)
     r = df.iloc[0]
     return r.index
