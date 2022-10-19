@@ -60,3 +60,16 @@ def find_jmonth_fr_df_col(df , targ_col , new_col , sep = '/') :
 
     df = df.join(_df[new_col])
     return df
+
+def ex_all_jdate_fr_fa_str(s , sep = '/') :
+    s = convert_digits_to_en(s)
+    pat = '(1[34]\d{2})' + sep + '(\d{2})' + sep + '(\d{2})'
+    return re.findall(pat , s)
+
+def ex_1st_jdate_fr_fa_str(s , sep = '/') :
+    ls = ex_all_jdate_fr_fa_str(s , sep)
+    return ls[0]
+
+def ex_1st_jmonth_fr_fa_str(s , sep = '/') :
+    ls = ex_1st_jdate_fr_fa_str(s , sep)
+    return ls[0] + '-' + ls[1]
