@@ -68,8 +68,12 @@ def ex_all_jdate_fr_fa_str(s , sep = '/') :
 
 def ex_1st_jdate_fr_fa_str(s , sep = '/') :
     ls = ex_all_jdate_fr_fa_str(s , sep)
+    if len(ls) == 0 :
+        return
     return ls[0]
 
 def ex_1st_jmonth_fr_fa_str(s , sep = '/') :
     ls = ex_1st_jdate_fr_fa_str(s , sep)
+    if len(ls) == 0 :
+        return
     return ls[0] + '-' + ls[1]
