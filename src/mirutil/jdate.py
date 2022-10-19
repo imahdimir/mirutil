@@ -8,6 +8,7 @@ from datetime import time
 
 from numpy import vectorize
 from persiantools.jdatetime import JalaliDate
+from .str import convert_digits_to_en
 
 
 def persian_tools_jdate_from_int(jdate_int_fmt: {int , str}) :
@@ -49,19 +50,13 @@ def make_datetime_from_iso_jdate_time(ist) :
 fu0 = make_datetime_from_iso_jdate_time
 vect_make_datetime_from_iso_jdate_time = vectorize(fu0)
 
-def find_jmonth_fr_persian_col_in_df(df , targ_col , new_col , sep = '/') :
-    pat = '(1[34]\d{2}' + sep + '\d{2}' + sep + '\d{2})'
+def find_jmonth_fr_col_in_df(df , targ_col , new_col , sep = '/') :
+    s = df[targ_col].apply(convert_digits_to_en)
 
-    msk = df[targ_col].notna()
-    _df = df[msk]
+    pat = '(1[34]\d{2})' + sep + '(\d{2})' + sep + '\d{2}'
+    _df = s.str.extract(pat)
 
-    s = _df[targ_col].astype(str)
-    s = s.str.extract(pat)
-    s = s.str.replace('\D' , '')
-    s = s.str[:6]
-    s = s.astype(int)
-    s = s.astype('string')
-    s = s.str[:4] + '-' + s.str[4 :6]
+    _df[new_col] = _df[0] + '-' + _df[1]
 
-    df.loc[msk , new_col] = s
+    df = df.join(_df[new_col])
     return df
