@@ -50,7 +50,7 @@ def make_datetime_from_iso_jdate_time(ist) :
 fu0 = make_datetime_from_iso_jdate_time
 vect_make_datetime_from_iso_jdate_time = vectorize(fu0)
 
-def find_jmonth_fr_col_in_df(df , targ_col , new_col , sep = '/') :
+def find_jmonth_fr_df_col(df , targ_col , new_col , sep = '/') :
     s = df[targ_col].apply(convert_digits_to_en)
 
     pat = '(1[34]\d{2})' + sep + '(\d{2})' + sep + '\d{2}'
