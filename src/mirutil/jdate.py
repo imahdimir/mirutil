@@ -70,10 +70,10 @@ def ex_all_jdate_fr_fa_str(s , sep = '/') :
 
 def ex_1st_jdate_fr_fa_str(s , sep = '/') :
     ls = ex_all_jdate_fr_fa_str(s , sep)
-    if ls :
+    if isinstance(ls , list) and len(ls) > 0 :
         return ls[0]
 
 def ex_1st_jmonth_fr_fa_str(s , sep = '/') :
-    ls = ex_1st_jdate_fr_fa_str(s , sep)
-    if ls :
-        return ls[0] + '-' + ls[1]
+    tu = ex_1st_jdate_fr_fa_str(s , sep)
+    if isinstance(tu , tuple) :
+        return tu[0] + '-' + tu[1]
