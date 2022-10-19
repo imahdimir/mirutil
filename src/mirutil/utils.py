@@ -43,7 +43,7 @@ def print_list_as_dict_fmt(lst) :
         print('"' + item + '" : None ,')
 
 def contains_any_of_list(container , ls) :
-    """ returns True if any of the elements of lst is in container. """
+    """ returns True if any of the elements of ls is in the container. """
     for el in ls :
         if el in container :
             return True

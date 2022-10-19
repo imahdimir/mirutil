@@ -6,13 +6,13 @@ import importlib
 
 import pandas as pd
 
-from src.mirutil import df_utils
+from src.mirutil import df
 from itertools import product
 
 
 importlib.reload(df_utils)
 
-from src.mirutil.df_utils import *
+from src.mirutil.df import *
 
 
 ##

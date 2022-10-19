@@ -35,11 +35,9 @@ def save_df_as_a_nice_xl(df ,
     wb.close()
     print(f"saved as {fpn}")
 
-
 def save_as_prq_wo_index(df , fpn) -> None :
     df.to_parquet(fpn , index = False)
     print(f'dataframe saved as {fpn} without index')
-
 
 def read_data_according_to_type(fpn) -> pd.DataFrame :
     suf = Path(fpn).suffix
@@ -49,7 +47,6 @@ def read_data_according_to_type(fpn) -> pd.DataFrame :
         return pd.read_parquet(fpn)
     elif suf == '.csv' :
         return pd.read_csv(fpn)
-
 
 def has_extra_data(df , df1) -> bool :
     df = df.convert_dtypes()
@@ -63,7 +60,6 @@ def has_extra_data(df , df1) -> bool :
     _df = _df.drop_duplicates()
 
     return not df.equals(_df)
-
 
 def drop_dup_and_sub_dfs(dfs_list: list) -> list :
     """
@@ -94,3 +90,9 @@ def drop_dup_and_sub_dfs(dfs_list: list) -> list :
     df = df.drop_duplicates(subset = 2)
 
     return df[1].to_list()
+
+def find_all_df_locs_eq_val(df: pd.DataFrame , val) -> pd.MultiIndex :
+    msk = df.eq(val)
+    _df = df[msk]
+    s = _df.stack()
+    return s.index
