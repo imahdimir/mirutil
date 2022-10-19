@@ -62,6 +62,8 @@ def find_jmonth_fr_df_col(df , targ_col , new_col , sep = '/') :
     return df
 
 def ex_all_jdate_fr_fa_str(s , sep = '/') :
+    if not isinstance(s , str) :
+        return s
     s = convert_digits_to_en(s)
     pat = '(1[34]\d{2})' + sep + '(\d{2})' + sep + '(\d{2})'
     return re.findall(pat , s)
