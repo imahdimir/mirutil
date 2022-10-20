@@ -7,6 +7,7 @@ from pathlib import Path
 import openpyxl as pyxl
 import pandas as pd
 from itertools import product
+from multiprocess.pool import Pool
 
 
 def save_df_as_a_nice_xl(df ,
@@ -35,18 +36,18 @@ def save_df_as_a_nice_xl(df ,
     wb.close()
     print(f"saved as {fpn}")
 
-def save_as_prq_wo_index(df , fpn) -> None :
-    df.to_parquet(fpn , index = False)
-    print(f'dataframe saved as {fpn} without index')
+def save_as_prq_wo_index(df , fp) -> None :
+    df.to_parquet(fp , index = False)
+    print(f'dataframe saved as {fp} without index')
 
-def read_data_according_to_type(fpn) -> pd.DataFrame :
-    suf = Path(fpn).suffix
+def read_data_according_to_type(fp) -> pd.DataFrame :
+    suf = Path(fp).suffix
     if suf == '.xlsx' :
-        return pd.read_excel(fpn)
+        return pd.read_excel(fp)
     elif suf == '.prq' :
-        return pd.read_parquet(fpn)
+        return pd.read_parquet(fp)
     elif suf == '.csv' :
-        return pd.read_csv(fpn)
+        return pd.read_csv(fp)
 
 def has_extra_data(df , df1) -> bool :
     df = df.convert_dtypes()
@@ -104,3 +105,72 @@ def ret_north_west_of_multiindex(mi: pd.MultiIndex) :
     df = df.sort_values(by = [0 , 1] , ascending = False)
     r = df.iloc[0]
     return r.index
+
+def ret_mask_indices(msk) :
+    return msk[msk].index
+
+def ret_indices(df , msk = None) :
+    if msk is not None :
+        return ret_mask_indices(msk)
+    else :
+        return df.index
+
+def make_inputs_4_apply_parallel(df , inds , inp_cols) :
+    if len(inp_cols) == 1 :
+        return df.loc[inds , inp_cols[0]]
+    else :
+        _df = df.loc[inds , inp_cols]
+        return zip(*[_df[x] for x in inp_cols])
+
+def run_parallel(func , inp , n_jobs = 30) :
+    pool = Pool(n_jobs)
+
+    if isinstance(inp , zip) :
+        fu = pool.starmap
+    else :
+        fu = pool.map
+
+    try :
+        return fu(func , inp)
+    except KeyboardInterrupt :
+        return
+
+def handle_parallel_output(o ,
+                           df ,
+                           inds ,
+                           out_cols ,
+                           out_map = None ,
+                           out_type_is_dict = True) :
+    if out_map and out_type_is_dict :
+        for k , v in out_map.items() :
+            df.loc[inds , k] = [x[v] for x in o]
+    elif out_map and not out_type_is_dict :
+        for k , v in out_map.items() :
+            df.loc[inds , k] = [x.__getattribute__(v) for x in o]
+    else :
+        for i , col in enumerate(out_cols) :
+            df.loc[inds , col] = [x[i] for x in o]
+
+    return df
+
+def df_apply_parallel(df ,
+                      func ,
+                      inp_cols: list ,
+                      out_cols: list ,
+                      out_map: dict = None ,
+                      out_type_is_dict = True ,
+                      msk = None ,
+                      test = False ,
+                      n_jobs = 30) :
+    inds = ret_indices(df , msk)
+    if test :
+        inds = inds[: min(100 , len(inds))]
+    inp = make_inputs_4_apply_parallel(df , inds , inp_cols)
+    o = run_parallel(func , inp , n_jobs)
+    df = handle_parallel_output(o ,
+                                df ,
+                                inds ,
+                                out_cols ,
+                                out_map ,
+                                out_type_is_dict)
+    return df
