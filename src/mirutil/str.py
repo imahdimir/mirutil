@@ -36,11 +36,26 @@ def strip_and_rm_successive_spaces(istr) :
     os = os.strip()
     return os
 
-def normalize_fa_str_completely(fa_string) :
-    if not isinstance(fa_string , str) :
-        return fa_string
-    os = convert_digits_to_en(fa_string)
+def normalize_fa_str_completely(fa_str: str) -> str :
+    if not isinstance(fa_str , str) :
+        return fa_str
+    os = convert_digits_to_en(fa_str)
     os = characters.ar_to_fa(os)
     os = rm_odd_chars(os)
     os = strip_and_rm_successive_spaces(os)
+    return os
+
+def normalize_completley_and_rm_all_whitespaces(fa_str: str) -> str :
+    if not isinstance(fa_str , str) :
+        return fa_str
+    os = normalize_fa_str_completely(fa_str)
+    _2rep = {
+            '\n'   : None ,
+            '\t'   : None ,
+            '\r\n' : None ,
+            ','    : None ,
+            ' '    : None ,
+            }
+    for k in _2rep.keys() :
+        os = os.replace(k , '')
     return os
