@@ -24,10 +24,10 @@ cte = Const()
 
 def download_chromium_if_not_installed() :
     """download chromium if not installed"""
-    url = 'https://google.org'
+    url = 'https://google.com'
 
     s = HTMLSession()
-    r = s.get(url , headers = cte.headers)
+    r = s.get(url , headers = cte.headers , timeout = 10)
     s.close()
 
     r.html.render(timeout = 30)
