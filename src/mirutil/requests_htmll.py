@@ -25,8 +25,11 @@ cte = Const()
 def download_chromium_if_not_installed() :
     """download chromium if not installed"""
     url = 'https://python.org'
-    with HTMLSession() as s :
-        r = s.get(url , headers = cte.headers)
+
+    s = HTMLSession()
+    r = s.get(url , headers = cte.headers)
+    s.close()
+
     r.html.render(timeout = 30)
 
 @dataclass
@@ -47,7 +50,7 @@ async def get_and_render_by_requests_html_async(url ,
                     params = params ,
                     verify = verify ,
                     timeout = get_timeout)
-    a.close()
+    await a.close()
 
     ret = RGetAndRender
     try :
