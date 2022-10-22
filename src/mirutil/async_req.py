@@ -25,48 +25,40 @@ cte = Const()
 class RGetReqAsync :
     status: int
     headers: dict
-    cnt: (bytes , None)
+    cont: (bytes , None)
 
 async def _get_req_async(url ,
                          headers = cte.headers ,
                          params = None ,
-                         trust_env = False ,
                          verify_ssl = True ,
                          timeout = None) :
-
-    async with ClientSession(trust_env = trust_env) as s :
-
+    async with ClientSession() as s :
         try :
             r = await s.get(url ,
                             headers = headers ,
                             params = params ,
                             verify_ssl = verify_ssl ,
                             timeout = timeout)
-
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
-                                cnt = await r.read())
-
+                                cont = await r.read())
         except ClientConnectorError as e :
             print(e)
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
-                                cnt = None)
+                                cont = None)
 
 async def get_reqs_async(urls ,
                          headers = cte.headers ,
                          params = None ,
-                         trust_env = False ,
                          verify_ssl = True ,
                          timeout = None) :
 
     fu = partial(_get_req_async ,
                  headers = headers ,
                  params = params ,
-                 trust_env = trust_env ,
                  verify_ssl = verify_ssl ,
                  timeout = timeout)
-
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
@@ -119,21 +111,17 @@ async def get_and_render_js_by_requests_html_async(url ,
                                                    verify = True ,
                                                    timeout = None) :
     ret = RGetAndRender
-
-    ses = AsyncHTMLSession()
-
-    r = await ses.get(url ,
-                      headers = headers ,
-                      params = params ,
-                      verify = verify ,
-                      timeout = timeout)
-
+    s = AsyncHTMLSession()
+    r = await s.get(url ,
+                    headers = headers ,
+                    params = params ,
+                    verify = verify ,
+                    timeout = timeout)
     try :
         await r.html.arender()
         return ret(status = r.status_code ,
                    headers = r.headers ,
                    html = r.html.html)
-
     except (XMLSyntaxError , TimeoutError) as e :
         print(e)
         return ret(status = r.status_code , headers = r.headers , html = None)
@@ -150,7 +138,6 @@ async def get_a_rendered_html_and_save_async(url ,
                   params = params ,
                   verify = verify ,
                   timeout = timeout)
-
     outer_html = ou.html
     if outer_html :
         await write_txt_to_file_async(outer_html , fp)
@@ -166,6 +153,5 @@ async def get_rendered_htmls_and_save_async(urls ,
                  params = params ,
                  verify = verify ,
                  timeout = timeout)
-
     co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
     return await asyncio.gather(*co_tasks)
