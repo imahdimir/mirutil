@@ -23,10 +23,10 @@ cte = Const()
 def download_chromium_if_not_installed() :
     from requests_html import HTMLSession
 
-    url = 'https://google.com'
+    url = 'https://python.org'
     s = HTMLSession()
     r = s.get(url)
-    r.html.render()
+    r.html.render(timeout = 30)
 
 @dataclass
 class RGetAndRender :
