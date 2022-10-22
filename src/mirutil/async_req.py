@@ -9,7 +9,7 @@ from functools import partial
 import nest_asyncio
 from aiohttp import ClientSession
 from lxml.etree import XMLSyntaxError
-from req_render_async import AsyncHTMLSession
+from requests_htmll import AsyncHTMLSession
 from pyppeteer.errors import TimeoutError
 from aiohttp.client_exceptions import ClientConnectorError
 

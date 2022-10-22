@@ -20,6 +20,11 @@ nest_asyncio.apply()
 
 cte = Const()
 
+def download_chromium() :
+    import pyppeteer
+
+    pyppeteer.chromium_downloader.download_chromium()
+
 @dataclass
 class RGetAndRender :
     status: int
