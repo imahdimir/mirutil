@@ -24,7 +24,7 @@ cte = Const()
 
 def download_chromium_if_not_installed() :
     """download chromium if not installed"""
-    url = 'https://python.org'
+    url = 'https://google.org'
 
     s = HTMLSession()
     r = s.get(url , headers = cte.headers)
