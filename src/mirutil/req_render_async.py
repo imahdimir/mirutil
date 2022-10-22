@@ -29,16 +29,17 @@ async def get_and_render_by_requests_html_async(url ,
                                                 headers = cte.headers ,
                                                 params = None ,
                                                 verify = True ,
-                                                timeout = None) :
+                                                get_timeout = None ,
+                                                render_timeout = None) :
     ret = RGetAndRender
-    s = AsyncHTMLSession()
-    r = await s.get(url ,
+    a = AsyncHTMLSession()
+    r = await a.get(url ,
                     headers = headers ,
                     params = params ,
                     verify = verify ,
-                    timeout = timeout)
+                    timeout = get_timeout)
     try :
-        await r.html.arender()
+        await r.html.arender(timeout = render_timeout)
         return ret(status = r.status_code ,
                    headers = r.headers ,
                    html = r.html.html)
@@ -51,26 +52,34 @@ async def get_a_rendered_html_and_save_async(url ,
                                              headers = cte.headers ,
                                              params = None ,
                                              verify = True ,
-                                             timeout = None) :
-    o = await get_and_render_by_requests_html_async(url ,
-                                                    headers = headers ,
-                                                    params = params ,
-                                                    verify = verify ,
-                                                    timeout = timeout)
+                                             get_timeout = None ,
+                                             render_timeout = None) :
+    fu = get_and_render_by_requests_html_async
+    o = await fu(url ,
+                 headers = headers ,
+                 params = params ,
+                 verify = verify ,
+                 get_timeout = get_timeout ,
+                 render_timeout = render_timeout)
+
     outer_html = o.html
     if outer_html :
         await write_txt_to_file_async(outer_html , fp)
+
+    return o
 
 async def get_rendered_htmls_and_save_async(urls ,
                                             fps ,
                                             headers = cte.headers ,
                                             params = None ,
                                             verify = True ,
-                                            timeout = None) :
+                                            get_timeout = None ,
+                                            render_timeout = None) :
     fu = partial(get_a_rendered_html_and_save_async ,
                  headers = headers ,
                  params = params ,
                  verify = verify ,
-                 timeout = timeout)
+                 get_timeout = get_timeout ,
+                 render_timeout = render_timeout)
     co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
     return await asyncio.gather(*co_tasks)
