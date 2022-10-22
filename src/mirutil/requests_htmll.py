@@ -41,13 +41,15 @@ async def get_and_render_by_requests_html_async(url ,
                                                 verify = True ,
                                                 get_timeout = None ,
                                                 render_timeout = None) :
+    a = AsyncHTMLSession()
+    r = await a.get(url ,
+                    headers = headers ,
+                    params = params ,
+                    verify = verify ,
+                    timeout = get_timeout)
+    a.close()
+
     ret = RGetAndRender
-    async with AsyncHTMLSession() as a :
-        r = await a.get(url ,
-                        headers = headers ,
-                        params = params ,
-                        verify = verify ,
-                        timeout = get_timeout)
     try :
         await r.html.arender(timeout = render_timeout)
         return ret(status = r.status_code ,
