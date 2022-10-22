@@ -9,6 +9,7 @@ from functools import partial
 import nest_asyncio
 from lxml.etree import XMLSyntaxError
 from requests_html import AsyncHTMLSession
+from pyppeteer.errors import TimeoutError as tout
 
 from .const import Const
 from .files import write_txt_to_file_async
@@ -24,11 +25,11 @@ class RGetAndRender :
     headers: dict
     html: (str , None)
 
-async def get_and_render_js_by_requests_html_async(url ,
-                                                   headers = cte.headers ,
-                                                   params = None ,
-                                                   verify = True ,
-                                                   timeout = None) :
+async def get_and_render_by_requests_html_async(url ,
+                                                headers = cte.headers ,
+                                                params = None ,
+                                                verify = True ,
+                                                timeout = None) :
     ret = RGetAndRender
     s = AsyncHTMLSession()
     r = await s.get(url ,
@@ -41,7 +42,7 @@ async def get_and_render_js_by_requests_html_async(url ,
         return ret(status = r.status_code ,
                    headers = r.headers ,
                    html = r.html.html)
-    except (XMLSyntaxError , TimeoutError) as e :
+    except (XMLSyntaxError , tout) as e :
         print(e)
         return ret(status = r.status_code , headers = r.headers , html = None)
 
@@ -51,13 +52,12 @@ async def get_a_rendered_html_and_save_async(url ,
                                              params = None ,
                                              verify = True ,
                                              timeout = None) :
-    fu = get_and_render_js_by_requests_html_async
-    ou = await fu(url ,
-                  headers = headers ,
-                  params = params ,
-                  verify = verify ,
-                  timeout = timeout)
-    outer_html = ou.html
+    o = await get_and_render_by_requests_html_async(url ,
+                                                    headers = headers ,
+                                                    params = params ,
+                                                    verify = verify ,
+                                                    timeout = timeout)
+    outer_html = o.html
     if outer_html :
         await write_txt_to_file_async(outer_html , fp)
 
