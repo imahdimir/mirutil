@@ -48,3 +48,6 @@ def contains_any_of_list(container , ls) :
         if el in container :
             return True
     return False
+
+def run_async_func_in_steps(fu , inps , steps) :
+    pass

@@ -8,9 +8,11 @@ from functools import partial
 
 import nest_asyncio
 from lxml.etree import XMLSyntaxError
+from requests_html import HTMLSession
 from requests_html import AsyncHTMLSession
 from pyppeteer.errors import TimeoutError as tout
 from pyppeteer.errors import PageError
+from requests.exceptions import ConnectionError
 
 from .const import Const
 from .files import write_txt_to_file_async
@@ -21,8 +23,7 @@ nest_asyncio.apply()
 cte = Const()
 
 def download_chromium_if_not_installed() :
-    from requests_html import HTMLSession
-
+    """download chromium if not installed"""
     url = 'https://python.org'
     s = HTMLSession()
     r = s.get(url)
@@ -52,7 +53,7 @@ async def get_and_render_by_requests_html_async(url ,
         return ret(status = r.status_code ,
                    headers = r.headers ,
                    html = r.html.html)
-    except (XMLSyntaxError , tout , PageError) as e :
+    except (XMLSyntaxError , tout , PageError , ConnectionError) as e :
         print(e)
         return ret(status = r.status_code , headers = r.headers , html = None)
 
