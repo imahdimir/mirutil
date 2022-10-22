@@ -20,10 +20,13 @@ nest_asyncio.apply()
 
 cte = Const()
 
-def download_chromium() :
-    import pyppeteer
+def download_chromium_if_not_installed() :
+    from requests_html import HTMLSession
 
-    pyppeteer.chromium_downloader.download_chromium()
+    url = 'https://google.com'
+    s = HTMLSession()
+    r = s.get(url)
+    r.html.render()
 
 @dataclass
 class RGetAndRender :
