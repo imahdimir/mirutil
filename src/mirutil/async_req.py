@@ -49,11 +49,15 @@ async def get_reqs_async(urls , **kwargs) :
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
-async def get_a_req_and_save_async(url , fp , write_mode = 'w' , **kwargs) :
+async def get_a_req_and_save_async(url ,
+                                   fp ,
+                                   write_mode = 'w' ,
+                                   encoding = None ,
+                                   **kwargs) :
     fu = partial(get_a_req_async , **kwargs)
     o = await fu(url)
     if o.status == 200 :
-        await write_to_file_async(o.cont , fp , mode = write_mode)
+        await write_to_file_async(o.cont , fp , write_mode , encoding)
     return o
 
 async def get_reqs_and_save_async(urls , fps , **kwargs) :

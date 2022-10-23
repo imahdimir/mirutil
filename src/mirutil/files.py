@@ -17,8 +17,10 @@ def read_json_file(fp) :
 
 def write_to_file(content , fp , mode = 'w' , encoding = 'utf-8') :
     if mode == 'w' :
+        txt = content.decode(encoding)
         with open(fp , mode , encoding = encoding) as f :
-            f.write(content)
+            f.write(txt)
+
     elif mode == 'wb' :
         with open(fp , mode) as f :
             f.write(content)
