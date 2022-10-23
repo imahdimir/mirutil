@@ -19,9 +19,9 @@ cte = Const()
 
 @dataclass
 class RGetReqAsync :
-    status: int
-    headers: dict
-    cont: (bytes , None)
+    status: (int , None) = None
+    headers: (dict , None) = None
+    cont: (bytes , None) = None
     err: (str , None) = None
 
 async def get_a_req_async(url ,
@@ -41,10 +41,7 @@ async def get_a_req_async(url ,
                                 cont = await r.read())
         except ClientConnectorError as e :
             print(e)
-            return RGetReqAsync(status = r.status ,
-                                headers = r.headers ,
-                                cont = None ,
-                                err = e)
+            return RGetReqAsync(err = e)
 
 async def get_reqs_async(urls ,
                          headers = cte.headers ,
@@ -65,14 +62,12 @@ async def get_texts_async(urls ,
                           params = None ,
                           verify_ssl = True ,
                           timeout = None) :
-
     fu = partial(get_reqs_async ,
                  headers = headers ,
                  params = params ,
                  trust_env = trust_env ,
                  verify_ssl = verify_ssl ,
                  timeout = timeout)
-
     return await fu(urls)
 
 async def get_jsons_async(urls ,
@@ -82,14 +77,11 @@ async def get_jsons_async(urls ,
                           trust_env = False ,
                           verify_ssl = True ,
                           timeout = None , ) :
-
     fu = partial(get_reqs_async ,
                  headers = headers ,
                  params = params ,
                  trust_env = trust_env ,
                  verify_ssl = verify_ssl ,
                  timeout = timeout)
-
     rs = await fu(urls)
-
     return [await rs.json(content_type = content_type) for rs in rs]
