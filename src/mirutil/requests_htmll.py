@@ -15,7 +15,7 @@ from pyppeteer.errors import PageError
 from requests.exceptions import ConnectionError
 
 from .const import Const
-from .files import write_txt_to_file_async
+from .files import write_txt_to_file_async , write_txt_to_file
 
 
 nest_asyncio.apply()
@@ -102,3 +102,54 @@ async def get_rendered_htmls_and_save_async(urls ,
                  render_timeout = render_timeout)
     co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
     return await asyncio.gather(*co_tasks)
+
+def get_and_render_by_requests_html(url ,
+                                    headers = cte.headers ,
+                                    params = None ,
+                                    verify = True ,
+                                    get_timeout = None ,
+                                    render_timeout = None) :
+
+    a = HTMLSession()
+    r = a.get(url ,
+              headers = headers ,
+              params = params ,
+              verify = verify ,
+              timeout = get_timeout)
+    a.close()
+
+    try :
+        r.html.render(timeout = render_timeout)
+        return RGetAndRender(status = r.status_code ,
+                             headers = r.headers ,
+                             html = r.html.html ,
+                             err = None)
+
+    except (XMLSyntaxError , tout , PageError , ConnectionError) as e :
+        print(e)
+        return RGetAndRender(status = r.status_code ,
+                             headers = r.headers ,
+                             html = None ,
+                             err = e)
+
+def get_a_rendered_html_and_save(url ,
+                                 fp ,
+                                 headers = cte.headers ,
+                                 params = None ,
+                                 verify = True ,
+                                 get_timeout = None ,
+                                 render_timeout = None) :
+    """ makes a get request & renders it javascript """
+
+    o = get_and_render_by_requests_html(url ,
+                                        headers = headers ,
+                                        params = params ,
+                                        verify = verify ,
+                                        get_timeout = get_timeout ,
+                                        render_timeout = render_timeout)
+
+    outer_html = o.html
+    if outer_html :
+        write_txt_to_file(outer_html , fp)
+
+    return o
