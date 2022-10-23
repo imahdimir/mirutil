@@ -2,9 +2,9 @@
 
     """
 
-from lxml import etree
-from html_table_parser import HTMLTableParser
 import pandas as pd
+from html_table_parser import HTMLTableParser
+from lxml import etree
 
 
 hdn_xpth = {

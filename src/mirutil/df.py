@@ -2,11 +2,11 @@
 
     """
 
+from itertools import product
 from pathlib import Path
 
 import openpyxl as pyxl
 import pandas as pd
-from itertools import product
 
 
 def save_df_as_a_nice_xl(df ,

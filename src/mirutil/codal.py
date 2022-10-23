@@ -11,7 +11,6 @@ class RFindFn :
     fn: (str , None)
     suf: (str , None)
 
-
 def find_fn_and_suf_fr_codal_get_resp(r_header) :
     cd = r_header["Content-Disposition"]
 

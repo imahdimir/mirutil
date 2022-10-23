@@ -8,14 +8,15 @@ from functools import partial
 
 import nest_asyncio
 from lxml.etree import XMLSyntaxError
-from requests_html import HTMLSession
-from requests_html import AsyncHTMLSession
-from pyppeteer.errors import TimeoutError as tout
 from pyppeteer.errors import PageError
+from pyppeteer.errors import TimeoutError as tout
 from requests.exceptions import ConnectionError
+from requests_html import AsyncHTMLSession
+from requests_html import HTMLSession
 
 from .const import Const
-from .files import write_txt_to_file_async , write_txt_to_file
+from .files import write_txt_to_file
+from .files import write_txt_to_file_async
 
 
 nest_asyncio.apply()
@@ -46,11 +47,14 @@ async def get_and_render_by_requests_html_async(url ,
                                                 get_timeout = None ,
                                                 render_timeout = None) :
     a = AsyncHTMLSession()
+    await a.close()
+
     r = await a.get(url ,
                     headers = headers ,
                     params = params ,
                     verify = verify ,
                     timeout = get_timeout)
+
     await a.close()
 
     try :

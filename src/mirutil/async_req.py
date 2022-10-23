@@ -8,12 +8,8 @@ from functools import partial
 
 import nest_asyncio
 from aiohttp import ClientSession
-from lxml.etree import XMLSyntaxError
-from requests_htmll import AsyncHTMLSession
-from pyppeteer.errors import TimeoutError
 from aiohttp.client_exceptions import ClientConnectorError
 
-from .files import write_txt_to_file_async
 from .const import Const
 
 
