@@ -64,8 +64,6 @@ async def get_and_render_by_requests_html_async(url ,
                              headers = r.headers ,
                              html = None ,
                              err = e)
-    finally :
-        await ases.close()
 
 async def get_a_rendered_html_and_save_async(url , fp , **kwargs) :
     fu = partial(get_and_render_by_requests_html_async , **kwargs)
