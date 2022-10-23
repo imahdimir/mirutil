@@ -9,8 +9,10 @@ from functools import partial
 import nest_asyncio
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
+from aiohttp.client_exceptions import TimeoutError as tout
 
 from .const import Const
+from .files import write_to_file_async
 
 
 nest_asyncio.apply()
@@ -39,49 +41,28 @@ async def get_a_req_async(url ,
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except ClientConnectorError as e :
+        except (ClientConnectorError , tout) as e :
             print(e)
             return RGetReqAsync(err = e)
 
-async def get_reqs_async(urls ,
-                         headers = cte.headers ,
-                         params = None ,
-                         verify_ssl = True ,
-                         timeout = None) :
-    fu = partial(get_a_req_async ,
-                 headers = headers ,
-                 params = params ,
-                 verify_ssl = verify_ssl ,
-                 timeout = timeout)
+async def get_reqs_async(urls , **kwargs) :
+    fu = partial(get_a_req_async , **kwargs)
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
 
-async def get_texts_async(urls ,
-                          headers = None ,
-                          trust_env = False ,
-                          params = None ,
-                          verify_ssl = True ,
-                          timeout = None) :
-    fu = partial(get_reqs_async ,
-                 headers = headers ,
-                 params = params ,
-                 trust_env = trust_env ,
-                 verify_ssl = verify_ssl ,
-                 timeout = timeout)
-    return await fu(urls)
+async def get_a_req_and_save_async(url , fp , write_mode = 'w' , **kwargs) :
+    fu = partial(get_a_req_async , **kwargs)
+    o = await fu(url)
+    if o.status == 200 :
+        await write_to_file_async(o.cont , fp , mode = write_mode)
+    return o
 
-async def get_jsons_async(urls ,
-                          content_type = None ,
-                          headers = cte.headers ,
-                          params = None ,
-                          trust_env = False ,
-                          verify_ssl = True ,
-                          timeout = None , ) :
-    fu = partial(get_reqs_async ,
-                 headers = headers ,
-                 params = params ,
-                 trust_env = trust_env ,
-                 verify_ssl = verify_ssl ,
-                 timeout = timeout)
+async def get_reqs_and_save_async(urls , fps , **kwargs) :
+    fu = partial(get_a_req_and_save_async , **kwargs)
+    co_tasks = [fu(x , y) for x , y in zip(urls , fps)]
+    return await asyncio.gather(*co_tasks)
+
+async def get_jsons_async(urls , content_type = None , **kwargs) :
+    fu = partial(get_a_req_async , **kwargs)
     rs = await fu(urls)
     return [await rs.json(content_type = content_type) for rs in rs]

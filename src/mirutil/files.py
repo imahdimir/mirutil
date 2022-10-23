@@ -22,5 +22,8 @@ def write_to_file(content , fp , mode = 'w' , encoding = 'utf-8') :
 def write_txt_to_file(txt , fp) :
     write_to_file(txt , fp)
 
+async def write_to_file_async(content , fp , mode = 'w' , encoding = 'utf-8') :
+    write_to_file(content , fp , mode , encoding)
+
 async def write_txt_to_file_async(txt , fp) :
     write_to_file(txt , fp)
