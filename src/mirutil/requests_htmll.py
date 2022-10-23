@@ -13,6 +13,7 @@ from pyppeteer.errors import TimeoutError as tout
 from requests.exceptions import ConnectionError
 from requests_html import AsyncHTMLSession
 from requests_html import HTMLSession
+from requests.exceptions import ReadTimeout
 
 from .const import Const
 from .files import write_txt_to_file
@@ -58,7 +59,8 @@ async def get_and_render_by_requests_html_async(url ,
                              headers = r.headers ,
                              html = r.html.html ,
                              err = None)
-    except (XMLSyntaxError , tout , PageError , ConnectionError) as e :
+    except (
+    XMLSyntaxError , tout , PageError , ConnectionError , ReadTimeout) as e :
         print(e)
         return RGetAndRender(status = r.status_code ,
                              headers = r.headers ,
