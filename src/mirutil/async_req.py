@@ -52,7 +52,7 @@ async def get_reqs_async(urls , **kwargs) :
 async def get_a_req_and_save_async(url ,
                                    fp ,
                                    write_mode = 'w' ,
-                                   encoding = None ,
+                                   encoding = 'utf-8' ,
                                    **kwargs) :
     fu = partial(get_a_req_async , **kwargs)
     o = await fu(url)
