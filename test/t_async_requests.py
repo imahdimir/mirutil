@@ -4,14 +4,14 @@
 
 import asyncio
 
-from src.mirutil.async_req import _get_req_async
+from src.mirutil.async_req import get_a_req_async
 from src.mirutil.async_req import get_and_render_js_by_requests_html_async as grj
 
 
 ##
 url = 'https://codal.ir/Reports/DownloadFile.aspx?id=lCbFkabC4qNOsjayDVl9nQ%3d%3d'
 
-fu = _get_req_async(url)
+fu = get_a_req_async(url)
 
 r = asyncio.run(fu)
 

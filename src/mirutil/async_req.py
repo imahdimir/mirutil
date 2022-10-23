@@ -22,12 +22,13 @@ class RGetReqAsync :
     status: int
     headers: dict
     cont: (bytes , None)
+    err: (str , None) = None
 
-async def _get_req_async(url ,
-                         headers = cte.headers ,
-                         params = None ,
-                         verify_ssl = True ,
-                         timeout = None) :
+async def get_a_req_async(url ,
+                          headers = cte.headers ,
+                          params = None ,
+                          verify_ssl = True ,
+                          timeout = None) :
     async with ClientSession() as s :
         try :
             r = await s.get(url ,
@@ -42,15 +43,15 @@ async def _get_req_async(url ,
             print(e)
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
-                                cont = None)
+                                cont = None ,
+                                err = e)
 
 async def get_reqs_async(urls ,
                          headers = cte.headers ,
                          params = None ,
                          verify_ssl = True ,
                          timeout = None) :
-
-    fu = partial(_get_req_async ,
+    fu = partial(get_a_req_async ,
                  headers = headers ,
                  params = params ,
                  verify_ssl = verify_ssl ,
@@ -92,5 +93,3 @@ async def get_jsons_async(urls ,
     rs = await fu(urls)
 
     return [await rs.json(content_type = content_type) for rs in rs]
-
-# getting & saving rendered Htmls async funcs
