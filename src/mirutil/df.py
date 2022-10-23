@@ -141,6 +141,9 @@ def handle_parallel_output(o ,
                            out_map = None ,
                            out_cols = None ,
                            out_type_is_dict = True) :
+    if out_cols is None :
+        out_cols = []
+
     if out_map and out_type_is_dict :
         for k , v in out_map.items() :
             df.loc[inds , k] = [x[v] for x in o]
