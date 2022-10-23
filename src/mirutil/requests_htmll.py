@@ -22,6 +22,7 @@ from .files import write_txt_to_file_async
 nest_asyncio.apply()
 
 cte = Const()
+ases = AsyncHTMLSession()
 
 def download_chromium_if_not_installed() :
     """download chromium if not installed"""
@@ -46,12 +47,11 @@ async def get_and_render_by_requests_html_async(url ,
                                                 verify = True ,
                                                 get_timeout = None ,
                                                 render_timeout = None) :
-    a = AsyncHTMLSession()
-    r = await a.get(url ,
-                    headers = headers ,
-                    params = params ,
-                    verify = verify ,
-                    timeout = get_timeout)
+    r = await ases.get(url ,
+                       headers = headers ,
+                       params = params ,
+                       verify = verify ,
+                       timeout = get_timeout)
     try :
         await r.html.arender(timeout = render_timeout)
         return RGetAndRender(status = r.status_code ,
@@ -65,7 +65,7 @@ async def get_and_render_by_requests_html_async(url ,
                              html = None ,
                              err = e)
     finally :
-        await a.close()
+        await ases.close()
 
 async def get_a_rendered_html_and_save_async(url , fp , **kwargs) :
     fu = partial(get_and_render_by_requests_html_async , **kwargs)
