@@ -36,7 +36,8 @@ def download_chromium_if_not_installed() :
 class RGetAndRender :
     status: int
     headers: dict
-    html: (str , None)
+    html: (str , None) = None
+    err: (str , None) = None
 
 async def get_and_render_by_requests_html_async(url ,
                                                 headers = cte.headers ,
@@ -52,15 +53,18 @@ async def get_and_render_by_requests_html_async(url ,
                     timeout = get_timeout)
     await a.close()
 
-    ret = RGetAndRender
     try :
         await r.html.arender(timeout = render_timeout)
-        return ret(status = r.status_code ,
-                   headers = r.headers ,
-                   html = r.html.html)
+        return RGetAndRender(status = r.status_code ,
+                             headers = r.headers ,
+                             html = r.html.html ,
+                             err = None)
     except (XMLSyntaxError , tout , PageError , ConnectionError) as e :
         print(e)
-        return ret(status = r.status_code , headers = r.headers , html = None)
+        return RGetAndRender(status = r.status_code ,
+                             headers = r.headers ,
+                             html = None ,
+                             err = e)
 
 async def get_a_rendered_html_and_save_async(url ,
                                              fp ,

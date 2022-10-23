@@ -141,9 +141,6 @@ def handle_parallel_output(o ,
                            out_map = None ,
                            out_cols = None ,
                            out_type_is_dict = True) :
-    if not (out_cols or out_map) :
-        raise ValueError('out_cols or out_map must be provided')
-
     if out_map and out_type_is_dict :
         for k , v in out_map.items() :
             df.loc[inds , k] = [x[v] for x in o]
@@ -165,9 +162,6 @@ def df_apply_parallel(df ,
                       msk = None ,
                       test = False ,
                       n_jobs = 30) :
-    if not (out_cols or out_map) :
-        raise ValueError('out_cols or out_map must be provided')
-
     inds = ret_indices(df , msk)
     if test :
         inds = inds[: min(100 , len(inds))]
