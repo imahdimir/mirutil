@@ -9,7 +9,6 @@ from functools import partial
 import nest_asyncio
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
-from aiohttp.client_exceptions import TimeoutError as tout
 
 from .const import Const
 from .files import write_to_file_async
@@ -41,7 +40,7 @@ async def get_a_req_async(url ,
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except (ClientConnectorError , tout) as e :
+        except (ClientConnectorError) as e :
             print(e)
             return RGetReqAsync(err = e)
 
