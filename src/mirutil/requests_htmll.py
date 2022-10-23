@@ -109,14 +109,15 @@ def get_and_render_by_requests_html(url ,
                                     verify = True ,
                                     get_timeout = None ,
                                     render_timeout = None) :
+    """ makes a get request & renders it javascript """
 
-    a = HTMLSession()
-    r = a.get(url ,
-              headers = headers ,
-              params = params ,
-              verify = verify ,
-              timeout = get_timeout)
-    a.close()
+    hs = HTMLSession()
+    r = hs.get(url ,
+               headers = headers ,
+               params = params ,
+               verify = verify ,
+               timeout = get_timeout)
+    hs.close()
 
     try :
         r.html.render(timeout = render_timeout)
@@ -139,17 +140,13 @@ def get_a_rendered_html_and_save(url ,
                                  verify = True ,
                                  get_timeout = None ,
                                  render_timeout = None) :
-    """ makes a get request & renders it javascript """
-
     o = get_and_render_by_requests_html(url ,
                                         headers = headers ,
                                         params = params ,
                                         verify = verify ,
                                         get_timeout = get_timeout ,
                                         render_timeout = render_timeout)
-
     outer_html = o.html
     if outer_html :
         write_txt_to_file(outer_html , fp)
-
     return o

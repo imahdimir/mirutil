@@ -7,7 +7,6 @@ from pathlib import Path
 import openpyxl as pyxl
 import pandas as pd
 from itertools import product
-from multiprocess.pool import Pool
 
 
 def save_df_as_a_nice_xl(df ,
@@ -119,10 +118,15 @@ def make_inputs_4_apply_parallel(df , inds , inp_cols) :
     if len(inp_cols) == 1 :
         return df.loc[inds , inp_cols[0]]
     else :
-        _df = df.loc[inds , inp_cols]
-        return zip(*[_df[x] for x in inp_cols])
+        df = df.loc[inds , inp_cols]
+        return zip(*[df[x].to_list() for x in inp_cols])
 
-def run_parallel(func , inp , n_jobs = 30) :
+def run_parallel(func , inp , n_jobs = 30 , console_run = True) :
+    if console_run :
+        from multiprocess.pool import Pool
+    else :
+        from multiprocessing import Pool
+
     pool = Pool(n_jobs)
 
     if isinstance(inp , zip) :
@@ -141,8 +145,8 @@ def handle_parallel_output(o ,
                            out_map = None ,
                            out_cols = None ,
                            out_type_is_dict = True) :
-    if out_cols is None :
-        out_cols = []
+    if (out_map is None) and (out_cols is None) :
+        return df
 
     if out_map and out_type_is_dict :
         for k , v in out_map.items() :
@@ -164,12 +168,13 @@ def df_apply_parallel(df ,
                       out_type_is_dict = True ,
                       msk = None ,
                       test = False ,
-                      n_jobs = 30) :
+                      n_jobs = 30 ,
+                      console_run = True) :
     inds = ret_indices(df , msk)
     if test :
         inds = inds[: min(100 , len(inds))]
     inp = make_inputs_4_apply_parallel(df , inds , inp_cols)
-    o = run_parallel(func , inp , n_jobs)
+    o = run_parallel(func , inp , n_jobs , console_run = console_run)
     df = handle_parallel_output(o ,
                                 df ,
                                 inds ,
