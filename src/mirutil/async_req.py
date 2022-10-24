@@ -10,6 +10,7 @@ import nest_asyncio
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.client_exceptions import ClientPayloadError
+from aiohttp.client_exceptions import ClientOSError
 
 from .const import Const
 from .files import write_to_file_async
@@ -41,7 +42,8 @@ async def get_a_req_async(url ,
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except (ClientConnectorError , ClientPayloadError) as e :
+        except (
+        ClientConnectorError , ClientPayloadError , ClientOSError) as e :
             print(e)
             return RGetReqAsync(err = e)
 
