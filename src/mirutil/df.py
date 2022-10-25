@@ -35,6 +35,12 @@ def save_df_as_a_nice_xl(df ,
     wb.close()
     print(f"saved as {fpn}")
 
+def update_with_last_run_data(df , fp) :
+    if Path(fp).exists() :
+        lastdf = pd.read_parquet(fp)
+        df.update(lastdf)
+    return df
+
 def save_as_prq_wo_index(df , fp) -> None :
     df.to_parquet(fp , index = False)
     print(f'dataframe saved as {fp} without index')
