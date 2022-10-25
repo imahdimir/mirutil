@@ -8,6 +8,8 @@ from pathlib import Path
 import openpyxl as pyxl
 import pandas as pd
 
+from typing import Union
+
 
 def save_df_as_a_nice_xl(df ,
                          fpn ,
@@ -145,46 +147,49 @@ def run_parallel(func , inp , n_jobs = 30 , console_run = True) :
     except KeyboardInterrupt :
         return
 
-def handle_parallel_output(o ,
-                           df ,
-                           inds ,
-                           out_map = None ,
-                           out_cols = None ,
-                           out_type_is_dict = True) :
-    if (out_map is None) and (out_cols is None) :
-        return df
-
-    if out_map and out_type_is_dict :
-        for k , v in out_map.items() :
-            df.loc[inds , k] = [x[v] for x in o]
-    elif out_map and not out_type_is_dict :
+def handle_parallel_output(o , df , inds , out_map) :
+    if isinstance(out_map , dict) :
         for k , v in out_map.items() :
             df.loc[inds , k] = [x.__getattribute__(v) for x in o]
-    else :
-        for i , col in enumerate(out_cols) :
+
+    elif isinstance(out_map , list) :
+        for i , col in enumerate(out_map) :
             df.loc[inds , col] = [x[i] for x in o]
 
     return df
 
+def make_out_map_ready(out_cols_map) :
+    if out_cols_map is None :
+        return
+
+    if isinstance(out_cols_map , dict) :
+
+        if list(out_cols_map.values())[0] is None :
+            return list(out_cols_map.keys())
+        else :
+            return out_cols_map
+
+    elif isinstance(out_cols_map , list) :
+        return out_cols_map
+
 def df_apply_parallel(df ,
                       func ,
                       inp_cols: list ,
-                      out_map: dict = None ,
-                      out_cols: list = None ,
-                      out_type_is_dict = True ,
+                      out_cols_map: Union[list , dict , None] = None ,
                       msk = None ,
                       test = False ,
-                      n_jobs = 30 ,
+                      n_jobs = 32 ,
                       console_run = True) :
+
     inds = ret_indices(df , msk)
     if test :
         inds = inds[: min(100 , len(inds))]
+
     inp = make_inputs_4_apply_parallel(df , inds , inp_cols)
+
     o = run_parallel(func , inp , n_jobs , console_run = console_run)
-    df = handle_parallel_output(o ,
-                                df ,
-                                inds ,
-                                out_map ,
-                                out_cols ,
-                                out_type_is_dict)
+
+    ocm = make_out_map_ready(out_cols_map)
+    df = handle_parallel_output(o , df , inds , ocm)
+
     return df
