@@ -153,15 +153,17 @@ def handle_parallel_output(o , df , inds , out_map) :
             df.loc[inds , k] = [x.__getattribute__(v) for x in o]
 
     elif isinstance(out_map , list) :
-        for i , col in enumerate(out_map) :
-            df.loc[inds , col] = [x[i] for x in o]
+
+        if len(out_map) == 1 :
+            df.loc[inds , out_map[0]] = o
+
+        else :
+            for i , col in enumerate(out_map) :
+                df.loc[inds , col] = [x[i] for x in o]
 
     return df
 
 def make_out_map_ready(out_cols_map) :
-    if out_cols_map is None :
-        return
-
     if isinstance(out_cols_map , dict) :
 
         if list(out_cols_map.values())[0] is None :
