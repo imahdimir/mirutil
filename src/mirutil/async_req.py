@@ -42,8 +42,8 @@ async def get_a_req_async(url ,
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except (
-        ClientConnectorError , ClientPayloadError , ClientOSError) as e :
+        except (ClientConnectorError , ClientPayloadError ,
+                ClientOSError) as e :
             print(e)
             return RGetReqAsync(err = e)
 
@@ -51,6 +51,9 @@ async def get_reqs_async(urls , **kwargs) :
     fu = partial(get_a_req_async , **kwargs)
     co_tasks = [fu(x) for x in urls]
     return await asyncio.gather(*co_tasks)
+
+def get_reqs_async_sync(urls , **kwargs) :
+    return asyncio.run(get_reqs_async(urls , **kwargs))
 
 async def get_a_req_and_save_async(url ,
                                    fp ,
