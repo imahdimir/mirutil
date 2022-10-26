@@ -195,3 +195,7 @@ def df_apply_parallel(df ,
     df = handle_parallel_output(o , df , inds , ocm)
 
     return df
+
+def drop_all_nan_rows_and_cols(df) :
+    df = df.dropna(how = "all")
+    return df.dropna(how = "all" , axis = 1)
