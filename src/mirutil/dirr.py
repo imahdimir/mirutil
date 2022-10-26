@@ -26,3 +26,9 @@ def has_subdir(dirp: Path) :
         if el.is_dir() :
             return True
     return False
+
+def make_dir_if_not_exist(dirr) :
+    di = Path(dirr)
+    if not di.exists() :
+        di.mkdir()
+    return di
