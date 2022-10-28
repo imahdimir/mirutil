@@ -187,6 +187,9 @@ def df_apply_parallel(df ,
     if test :
         inds = inds[: min(100 , len(inds))]
 
+    if len(inds) == 0 :
+        return df
+
     inp = make_inputs_4_apply_parallel(df , inds , inp_cols)
 
     o = run_parallel(func , inp , n_jobs , console_run = console_run)
