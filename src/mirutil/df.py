@@ -2,6 +2,7 @@
 
     """
 
+import re
 from itertools import product
 from pathlib import Path
 
@@ -202,3 +203,17 @@ def df_apply_parallel(df ,
 def drop_all_nan_rows_and_cols(df) :
     df = df.dropna(how = "all")
     return df.dropna(how = "all" , axis = 1)
+
+def does_df_iloc_val_matches_ptrn(df ,
+                                  iat: tuple ,
+                                  ptrn: (str , None)) -> bool :
+    row , col = iat
+    cell_v = df.iat[row , col]
+
+    if pd.isna(cell_v) and pd.isna(ptrn) :
+        return True
+    elif pd.isna(cell_v) :
+        return False
+
+    cell_v = str(cell_v)
+    return re.fullmatch(ptrn , cell_v) is not None
