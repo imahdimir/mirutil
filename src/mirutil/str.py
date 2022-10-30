@@ -59,3 +59,13 @@ def normalize_completley_and_rm_all_whitespaces(fa_str: str) -> str :
     for k in _2rep.keys() :
         os = os.replace(k , '')
     return os
+
+def any_of_patterns_matches(istr , patterns) :
+    if not isinstance(istr , str) :
+        return istr
+
+    for pattern in patterns :
+        if re.fullmatch(pattern , istr) :
+            return True
+
+    return False
