@@ -6,8 +6,12 @@ import json
 
 
 def read_file(fp , mode = 'r' , encoding = 'utf-8') :
-    with open(fp , mode , encoding = encoding) as f :
-        return f.read()
+    if mode == 'r' :
+        with open(fp , mode , encoding = encoding) as f :
+            return f.read()
+    elif mode == 'rb' :
+        with open(fp , mode) as f :
+            return f.read()
 
 def read_txt_file(fp , encoding = 'utf-8') :
     return read_file(fp , encoding = encoding)
