@@ -30,22 +30,25 @@ class RGetReqAsync :
 async def get_a_req_async(url ,
                           headers = cte.headers ,
                           params = None ,
-                          verify_ssl = True ,
-                          timeout = None ,
-                          proxy_headers = None) :
+                          ssl = True ,
+                          timeout = None , ) :
+
     async with ClientSession() as s :
+
         try :
             r = await s.get(url ,
                             headers = headers ,
                             params = params ,
-                            verify_ssl = verify_ssl ,
-                            timeout = timeout ,
-                            proxy_headers = proxy_headers , )
+                            ssl = ssl ,
+                            timeout = timeout , )
+
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
+
         except (ClientConnectorError , ClientPayloadError ,
                 ClientOSError) as e :
+
             print(e)
             return RGetReqAsync(err = e)
 
