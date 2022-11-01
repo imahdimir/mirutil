@@ -5,7 +5,7 @@
 import shutil
 from pathlib import Path
 
-from githubdata import GitHubDataRepo
+from giteasy import GitHubRepo
 
 
 def rm_all_in_datalore_cwd() :
@@ -33,14 +33,6 @@ def rm_all_in_datalore_cwd() :
     print(list(fps))
 
 def clone_repo_in_datalore_cwd(repo_url) :
-    """Clone a git repository into the current working directory.
-
-    This is useful for cloning a git repository into the current working
-    directory of a datalore notebook.
-    """
-    print('cwd: ' + str(Path.cwd()))
-    print('repo_url: ' + repo_url)
-    rp = GitHubDataRepo(repo_url , local_path = Path.cwd())
-    rp.clone_overwrite()
-    fps = Path.cwd().glob('*')
-    print(list(fps))
+    """Clone a git repository into the current working directory of a datalore notebook."""
+    ghr = GitHubRepo(repo_url , local_path = Path.cwd())
+    ghr.clone_overwrite()
