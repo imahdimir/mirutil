@@ -42,8 +42,8 @@ async def get_a_req_async(url ,
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except (ClientConnectorError , ClientPayloadError ,
-                ClientOSError) as e :
+        except (
+        ClientConnectorError , ClientPayloadError , ClientOSError) as e :
             print(e)
             return RGetReqAsync(err = e)
 
@@ -79,5 +79,5 @@ async def get_jsons_async(urls , content_type = None , **kwargs) :
     rs = await fu(urls)
     return [await rs.json(content_type = content_type) for rs in rs]
 
-async def get_jsons_async_sync(urls , content_type = None , **kwargs) :
+def get_jsons_async_sync(urls , content_type = None , **kwargs) :
     return asyncio.run(get_jsons_async(urls , content_type , **kwargs))
