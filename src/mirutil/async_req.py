@@ -31,14 +31,16 @@ async def get_a_req_async(url ,
                           headers = cte.headers ,
                           params = None ,
                           verify_ssl = True ,
-                          timeout = None) :
+                          timeout = None ,
+                          proxies = None) :
     async with ClientSession() as s :
         try :
             r = await s.get(url ,
                             headers = headers ,
                             params = params ,
                             verify_ssl = verify_ssl ,
-                            timeout = timeout)
+                            timeout = timeout ,
+                            proxies = proxies , )
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
