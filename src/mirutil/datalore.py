@@ -5,7 +5,7 @@
 import shutil
 from pathlib import Path
 
-from githubdata import GithubData
+from githubdata import GitHubDataRepo
 
 
 def rm_all_in_datalore_cwd() :
@@ -40,12 +40,7 @@ def clone_repo_in_datalore_cwd(repo_url) :
     """
     print('cwd: ' + str(Path.cwd()))
     print('repo_url: ' + repo_url)
-
-    rp = GithubData(repo_url)
-
-    rp.local_path = Path.cwd()
-
-    rp.overwriting_clone(overwrite = False)
-
+    rp = GitHubDataRepo(repo_url , local_path = Path.cwd())
+    rp.clone_overwrite()
     fps = Path.cwd().glob('*')
     print(list(fps))
