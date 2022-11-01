@@ -32,7 +32,7 @@ async def get_a_req_async(url ,
                           params = None ,
                           verify_ssl = True ,
                           timeout = None ,
-                          proxies = None) :
+                          proxy_headers = None) :
     async with ClientSession() as s :
         try :
             r = await s.get(url ,
@@ -40,7 +40,7 @@ async def get_a_req_async(url ,
                             params = params ,
                             verify_ssl = verify_ssl ,
                             timeout = timeout ,
-                            proxy_headers = proxies , )
+                            proxy_headers = proxy_headers , )
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
