@@ -40,12 +40,12 @@ async def get_a_req_async(url ,
                             params = params ,
                             verify_ssl = verify_ssl ,
                             timeout = timeout ,
-                            proxies = proxies , )
+                            proxy_headers = proxies , )
             return RGetReqAsync(status = r.status ,
                                 headers = r.headers ,
                                 cont = await r.read())
-        except (
-        ClientConnectorError , ClientPayloadError , ClientOSError) as e :
+        except (ClientConnectorError , ClientPayloadError ,
+                ClientOSError) as e :
             print(e)
             return RGetReqAsync(err = e)
 
