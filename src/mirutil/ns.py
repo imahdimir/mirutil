@@ -4,16 +4,13 @@
 
 from pathlib import Path
 
-import githubdata as gd
+from giteasy import GitHubRepo
 
 from .files import read_json_file
 from .files import write_txt_to_file
 
 
-class Const :
-    ns_repo_url = 'https://github.com/imahdimir/ns'
-
-cte = Const()
+ns_repo_url = 'https://github.com/imahdimir/ns'
 
 def update_ns_module() :
     py = ''
@@ -34,19 +31,19 @@ def read_local_ns_json() :
     return read_json_file('ns.json')
 
 def ret_ns_module_code() :
-    gds = gd.GithubData(cte.ns_repo_url)
-    gds.overwriting_clone()
+    ghr = GitHubRepo(ns_repo_url)
+    ghr.clone_overwrite()
 
     ns = read_local_ns_json()
 
     py = ''
     for k , v in ns.items() :
-        jsp = gds.local_path / f'{v}.json'
+        jsp = ghr.local_path / f'{v}.json'
         gj = read_json_file(jsp)
         py += make_class_code_str_fr_dict(k , gj)
         py += '\n'
 
-    gds.rmdir()
+    ghr.rmdir()
 
     return py
 
@@ -64,8 +61,8 @@ def make_class_instance_of_ns_classes_instances() :
     return cls()
 
 def make_ns_classes_instances() :
-    gds = gd.GithubData(cte.ns_repo_url)
-    gds.overwriting_clone()
+    gds = GitHubRepo(ns_repo_url)
+    gds.clone_overwrite()
 
     ns = read_local_ns_json()
 
