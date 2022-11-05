@@ -5,11 +5,10 @@
 import re
 from itertools import product
 from pathlib import Path
+from typing import Union
 
 import openpyxl as pyxl
 import pandas as pd
-
-from typing import Union
 
 
 def save_df_as_a_nice_xl(df ,

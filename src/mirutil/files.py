@@ -3,6 +3,7 @@
     """
 
 import json
+import tarfile
 
 
 def read_file(fp , mode = 'r' , encoding = 'utf-8') :
@@ -40,3 +41,7 @@ async def write_to_file_async(content , fp , mode = 'w' , encoding = 'utf-8') :
 
 async def write_txt_to_file_async(txt , fp) :
     write_to_file(txt , fp)
+
+def untar_to(src , dst_dir) :
+    with tarfile.open(src) as f :
+        f.extractall(dst_dir)

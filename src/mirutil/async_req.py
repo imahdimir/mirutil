@@ -9,8 +9,8 @@ from functools import partial
 import nest_asyncio
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
-from aiohttp.client_exceptions import ClientPayloadError
 from aiohttp.client_exceptions import ClientOSError
+from aiohttp.client_exceptions import ClientPayloadError
 
 from .const import Const
 from .files import write_to_file_async
