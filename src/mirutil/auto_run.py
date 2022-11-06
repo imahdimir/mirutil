@@ -28,7 +28,7 @@ def make_venv(fp = Path('conf.json')) :
     print("Python version:" , pyv)
 
     subprocess.run(['pyenv' , 'install' , '--skip-existing' , pyv])
-
+    subprocess.run(['pyenv' , 'virtualenv-delete' , '-f' , ghr.repo_name])
     subprocess.run(['pyenv' , 'virtualenv' , pyv , ghr.repo_name])
 
     print(ghr.repo_name)
