@@ -32,11 +32,6 @@ def make_venv(fp = conf.def_fn) :
     subprocess.run(['pyenv' , 'virtualenv-delete' , '-f' , ghr.repo_name])
     subprocess.run(['pyenv' , 'virtualenv' , pyv , ghr.repo_name])
 
-    print(ghr.repo_name)
-
-def ret_dirn(fp = conf.def_fn) :
-    js = read_json_file(fp)
-    rp_url = js[conf.repo_url]
     dirp = download_latest_release_of_public_github_repo(rp_url)
     print(dirp.name)
 
