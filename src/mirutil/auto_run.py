@@ -22,10 +22,8 @@ def make_venv(fp = Path('conf.json')) :
 
     rp_url = js[conf.repo_url]
     ghr = GitHubRepo(rp_url)
-    print(rp_url)
 
     pyv = js[conf.python_version]
-    print("Python version:" , pyv)
 
     subprocess.run(['pyenv' , 'install' , '--skip-existing' , pyv])
     subprocess.run(['pyenv' , 'virtualenv-delete' , '-f' , ghr.repo_name])
