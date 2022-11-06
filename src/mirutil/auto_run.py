@@ -6,18 +6,21 @@ import subprocess
 from pathlib import Path
 
 from giteasy import GitHubRepo
+from giteasy.github_releases import \
+    download_latest_release_of_public_github_repo
 
 from .files import read_json_file
 
 
 class Conf :
+    def_fn = Path('conf.json')
     repo_url = 'repo_url'
     python_version = 'python_version'
     module_2_run = "module_2_run"
 
 conf = Conf()
 
-def make_venv(fp = Path('conf.json')) :
+def make_venv(fp = conf.def_fn) :
     js = read_json_file(fp)
 
     rp_url = js[conf.repo_url]
@@ -30,3 +33,13 @@ def make_venv(fp = Path('conf.json')) :
     subprocess.run(['pyenv' , 'virtualenv' , pyv , ghr.repo_name])
 
     print(ghr.repo_name)
+
+def ret_dirn(fp = conf.def_fn) :
+    js = read_json_file(fp)
+    rp_url = js[conf.repo_url]
+    dirp = download_latest_release_of_public_github_repo(rp_url)
+    print(dirp.name)
+
+def ret_module_2_run_name(fp = conf.def_fn) :
+    js = read_json_file(fp)
+    print(js[conf.module_2_run])
