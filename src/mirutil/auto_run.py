@@ -43,3 +43,8 @@ def ret_dirn(fp = conf.def_fn) :
 def ret_module_2_run_name(fp = conf.def_fn) :
     js = read_json_file(fp)
     print(js[conf.module_2_run])
+
+def dl_main_bash() :
+    rp_url = 'https://github.com/imahdimir/auto-run-bash'
+    dirp = download_latest_release_of_public_github_repo(rp_url)
+    print(dirp)
