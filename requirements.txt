@@ -1,5 +1,0 @@
-numpy~=1.23.3
-persiantools~=3.0.1
-pytz
-IPython
-gitignore_parser~=0.1.0
