@@ -3,7 +3,7 @@
     """
 
 import pandas as pd
-from html_table_parser import HTMLTableParser
+from html_table_parser.parser import HTMLTableParser
 from lxml import etree
 
 
@@ -18,7 +18,6 @@ def make_hidden_elements_of_etree_row_col_span_zero(tree: etree) -> etree :
         for el in tree.xpath(xp) :
             el.set("rowspan" , "0")
             el.set("colspan" , "0")
-
     return tree
 
 def rm_hidden_elements_of_etree(tree: etree) -> etree :
