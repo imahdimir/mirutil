@@ -89,7 +89,13 @@ async def _get_a_req_and_save_async(url ,
 
     if o.r.status == 200 :
         o = await _process_rget(o , mode = mode)
-        await write_to_file_async(o.cont , fp , write_mode , encoding)
+
+        try :
+            await write_to_file_async(o.cont , fp , write_mode , encoding)
+
+        except UnicodeError as e :
+            print(e)
+            return RGet(exc = str(e))
 
     return o
 
