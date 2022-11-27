@@ -24,14 +24,11 @@ nest_asyncio.apply()
 cte = Const()
 ases = AsyncHTMLSession()
 
-def download_chromium_if_not_installed() :
-    """download chromium if not installed"""
-    url = 'https://google.com'
-
+def download_chromium_if_not_installed(url = 'https://www.google.com') :
+    """ downloads chromium if it is not installed """
     s = HTMLSession()
     r = s.get(url , headers = cte.headers , timeout = 10)
     s.close()
-
     r.html.render(timeout = 30)
 
 @dataclass

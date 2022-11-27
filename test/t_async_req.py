@@ -4,30 +4,18 @@
 
 import asyncio
 
-from src.mirutil.async_req import _get_a_req_async , ExClientResponse
+from src.mirutil.async_req import get_reqs_and_save_async_sync as grasas
 
 
 ##
-url = 'https://search.codal.ir/api/search/v2/q?&Audited=true&AuditorRef=-1&Category=-1&Childs=true&CompanyState=-1&CompanyType=-1&Consolidatable=true&IsNotAudited=false&Length=-1&LetterType=-1&Mains=true&NotAudited=true&NotConsolidatable=true&PageNumber=1&Publisher=false&TracingNo=-1&search=false'
-r = asyncio.run(_get_a_req_async(url))
+url = 'https://excel.codal.ir/service/Excel/GetAll/3scwkK3cwWVPTvP5QQQaQQQ2%2b9RA%3d%3d/0'
 
-##
-r.status
-
-##
-ExClientResponse.from_client_response(r)
+grasas([url] , ['1.html'])
 
 ##
 
-r = Res(status = 200 , cnt = 'a')
-r
+##
 
 ##
-url = 'https://codal.ir/Reports/Decision.aspx?LetterSerial=RZQQQaQQQzaaQcLNBAkBMuVzTYXg%3D%3D&rt=0&let=58&ct=0&ft=-1'
-fu = grj(url)
-r = asyncio.run(fu)
-
-##
-r.status_code
 
 ##

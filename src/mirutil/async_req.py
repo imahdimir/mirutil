@@ -33,18 +33,16 @@ async def _get_a_req_async(url ,
                            params = None ,
                            ssl = True ,
                            timeout = None) :
-    async with client_session as s :
-        try :
-            r = await s.get(url ,
-                            headers = headers ,
-                            params = params ,
-                            ssl = ssl ,
-                            timeout = timeout)
-            return RGet(r = r)
-        except (ClientConnectorError , ClientPayloadError ,
-                ClientOSError) as e :
-            print(e)
-            return RGet(exc = str(e))
+    try :
+        r = await client_session.get(url ,
+                                     headers = headers ,
+                                     params = params ,
+                                     ssl = ssl ,
+                                     timeout = timeout)
+        return RGet(r = r)
+    except (ClientConnectorError , ClientPayloadError , ClientOSError) as e :
+        print(e)
+        return RGet(exc = str(e))
 
 async def _process_rget(rget , mode) :
     if rget.exc is not None :
