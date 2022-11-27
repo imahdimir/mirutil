@@ -12,6 +12,7 @@ from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.client_exceptions import ClientOSError
 from aiohttp.client_exceptions import ClientPayloadError
 from aiohttp import ClientResponse
+from asyncio.exceptions import TimeoutError
 
 from .const import Const
 from .files import write_to_file_async
@@ -40,7 +41,8 @@ async def _get_a_req_async(url ,
                                      ssl = ssl ,
                                      timeout = timeout)
         return RGet(r = r)
-    except (ClientConnectorError , ClientPayloadError , ClientOSError) as e :
+    except (ClientConnectorError , ClientPayloadError , ClientOSError ,
+            TimeoutError) as e :
         print(e)
         return RGet(exc = str(e))
 
