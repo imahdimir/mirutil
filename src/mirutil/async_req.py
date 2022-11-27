@@ -28,11 +28,12 @@ class RGet :
     cont: bytes | None = None
 
 async def _get_a_req_async(url ,
+                           client_session ,
                            headers = cte.headers ,
                            params = None ,
                            ssl = True ,
                            timeout = None) :
-    async with ClientSession() as s :
+    async with client_session as s :
         try :
             r = await s.get(url ,
                             headers = headers ,
@@ -40,8 +41,8 @@ async def _get_a_req_async(url ,
                             ssl = ssl ,
                             timeout = timeout)
             return RGet(r = r)
-        except (
-        ClientConnectorError , ClientPayloadError , ClientOSError) as e :
+        except (ClientConnectorError , ClientPayloadError ,
+                ClientOSError) as e :
             print(e)
             return RGet(exc = str(e))
 
@@ -53,36 +54,63 @@ async def _process_rget(rget , mode) :
         return rget
 
     if mode == 'read' :
-        rget.cont = await rget.read()
+        rget.cont = await rget.r.read()
     elif mode == 'json' :
-        rget.cont = await rget.json()
+        rget.cont = await rget.r.json()
     return rget
 
 async def _get_resps_async(urls , mode , **kwargs) :
-    f = partial(_get_a_req_async , **kwargs)
+    sess = ClientSession()
+    f = partial(_get_a_req_async , client_session = sess , **kwargs)
     co_tasks = [f(x) for x in urls]
     resps = await asyncio.gather(*co_tasks)
-    return await asyncio.gather(*[_process_rget(x , mode) for x in resps])
+    o = await asyncio.gather(*[_process_rget(x , mode) for x in resps])
+    await sess.close()
+    return o
 
 def get_resps_async_sync(urls , mode = 'read' , **kwargs) :
     return asyncio.run(_get_resps_async(urls , mode = mode , **kwargs))
 
 async def _get_a_req_and_save_async(url ,
                                     fp ,
-                                    write_mode = 'w' ,
-                                    encoding = 'utf-8' ,
+                                    client_session ,
+                                    mode ,
+                                    write_mode ,
+                                    encoding ,
                                     **kwargs) :
-    fu = partial(_get_a_req_async , **kwargs)
-    o = await fu(url)
-    if o.status == 200 :
-        o = await _process_rget(o , mode = 'read')
+    o = await _get_a_req_async(url , client_session , **kwargs)
+    if o.r.status == 200 :
+        o = await _process_rget(o , mode = mode)
         await write_to_file_async(o.cont , fp , write_mode , encoding)
     return o
 
-async def _get_reqs_and_save_async(urls , fps , **kwargs) :
-    f = partial(_get_a_req_and_save_async , **kwargs)
+async def _get_reqs_and_save_async(urls ,
+                                   fps ,
+                                   mode ,
+                                   write_mode ,
+                                   encoding ,
+                                   **kwargs) :
+    cs = ClientSession()
+    f = partial(_get_a_req_and_save_async ,
+                client_session = cs ,
+                mode = mode ,
+                write_mode = write_mode ,
+                encoding = encoding ,
+                **kwargs)
     co_tasks = [f(x , y) for x , y in zip(urls , fps)]
-    return await asyncio.gather(*co_tasks)
+    o = await asyncio.gather(*co_tasks)
+    await cs.close()
+    return o
 
-def get_reqs_and_save_async_sync(urls , fps , **kwargs) :
-    return asyncio.run(_get_reqs_and_save_async(urls , fps , **kwargs))
+def get_reqs_and_save_async_sync(urls ,
+                                 fps ,
+                                 mode = 'read' ,
+                                 write_mode = 'w' ,
+                                 encoding = 'utf-8' ,
+                                 **kwargs) :
+    return asyncio.run(_get_reqs_and_save_async(urls ,
+                                                fps ,
+                                                mode = mode ,
+                                                write_mode = write_mode ,
+                                                encoding = encoding ,
+                                                **kwargs))
