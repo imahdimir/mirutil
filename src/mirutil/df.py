@@ -14,27 +14,21 @@ import pandas as pd
 def save_df_as_a_nice_xl(df ,
                          fpn ,
                          index: bool = False ,
-                         header: bool = True ,
-                         max_col_length: int = 40) -> None :
-    df.to_excel(fpn , index = False)
-
-    wb = pyxl.load_workbook(fpn)
-    ws = wb.active
-
-    panes = index * ws['A'] + header * ws[1]
-
-    for cell in panes :
-        cell.style = 'Pandas'
-
-    for column in ws.columns :
-        length = max(len(str(cell.value)) for cell in column) + 3
-        length = length if length <= max_col_length else max_col_length
-        ws.column_dimensions[column[0].column_letter].width = length
-
-    ws.freeze_panes = 'A2'
-
-    wb.save(fpn)
-    wb.close()
+                         max_col_len: None | int = None) -> None :
+    writer = pd.ExcelWriter(fpn , engine = 'xlsxwriter')
+    df.to_excel(writer , index = index)
+    worksheet = writer.sheets['Sheet1']
+    for i , col in enumerate(df) :
+        series = df[col]
+        max_len = max((
+                series.astype(str).map(len).max() ,  # len of largest item
+                len(str(series.name))  # len of column name/header
+                )) + 1  # adding a little extra space
+        if max_col_len is not None :
+            max_len = min(max_len , max_col_len)
+        worksheet.set_column(i , i , max_len)  # set column width
+    worksheet.freeze_panes(1 , 0)  # freeze the first row
+    writer.save()
     print(f"saved as {fpn}")
 
 def update_with_last_run_data(df , fp) :
