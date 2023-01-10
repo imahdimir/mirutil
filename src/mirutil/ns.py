@@ -9,8 +9,11 @@ from giteasy import GitHubRepo
 from .files import read_json_file
 from .files import write_txt_to_file
 
+class Const :
+    ns_repo_url = 'https://github.com/imahdimir/ns'
+    ns_py_name = 'ns.py'
 
-ns_repo_url = 'https://github.com/imahdimir/ns'
+cte = Const()
 
 def update_ns_module() :
     py = ''
@@ -21,7 +24,7 @@ def update_ns_module() :
     if Path('ns.json').exists() :
         py += ret_ns_module_code()
 
-    write_txt_to_file(py , 'ns.py')
+    write_txt_to_file(py , cte.ns_py_name)
 
 def ret_gdu_module_code() :
     gj = read_json_file('gdu.json')
@@ -31,7 +34,7 @@ def read_local_ns_json() :
     return read_json_file('ns.json')
 
 def ret_ns_module_code() :
-    ghr = GitHubRepo(ns_repo_url)
+    ghr = GitHubRepo(cte.ns_repo_url)
     ghr.clone_overwrite()
 
     ns = read_local_ns_json()
@@ -61,7 +64,7 @@ def make_class_instance_of_ns_classes_instances() :
     return cls()
 
 def make_ns_classes_instances() :
-    gds = GitHubRepo(ns_repo_url)
+    gds = GitHubRepo(cte.ns_repo_url)
     gds.clone_overwrite()
 
     ns = read_local_ns_json()
@@ -82,6 +85,7 @@ def make_class_fr_dict(dct) :
             for k , v in dct.items() :
                 setattr(self , k , v)
 
+
     return TheClass
 
 def make_class_fr_json_file(json_fp) :
@@ -91,3 +95,6 @@ def make_class_fr_json_file(json_fp) :
 def make_class_instance_fr_json_file(json_fp) :
     cls = make_class_fr_json_file(json_fp)
     return cls()
+
+def rm_ns_module() :
+    Path(cte.ns_py_name).unlink()
