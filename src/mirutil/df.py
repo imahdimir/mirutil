@@ -10,11 +10,12 @@ from typing import Union
 import openpyxl as pyxl
 import pandas as pd
 
-
 def save_df_as_a_nice_xl(df ,
                          fpn ,
                          index: bool = False ,
-                         max_col_len: None | int = None) -> None :
+                         max_col_len: None | int = None ,
+                         freeze_panes: None | tuple = None
+                         ) -> None :
     writer = pd.ExcelWriter(fpn , engine = 'xlsxwriter')
     df.to_excel(writer , index = index)
     worksheet = writer.sheets['Sheet1']
@@ -27,7 +28,10 @@ def save_df_as_a_nice_xl(df ,
         if max_col_len is not None :
             max_len = min(max_len , max_col_len)
         worksheet.set_column(i , i , max_len)  # set column width
-    worksheet.freeze_panes(1 , 0)  # freeze the first row
+
+    if freeze_panes is not None :
+        row , col = freeze_panes
+        worksheet.freeze_panes(row , col)  # freeze the first row
     writer.save()
     print(f"saved as {fpn}")
 
@@ -175,8 +179,8 @@ def df_apply_parallel(df ,
                       msk = None ,
                       test = False ,
                       n_jobs = 32 ,
-                      console_run = True) :
-
+                      console_run = True
+                      ) :
     inds = ret_indices(df , msk)
     if test :
         inds = inds[: min(100 , len(inds))]
@@ -197,9 +201,8 @@ def drop_all_nan_rows_and_cols(df) :
     df = df.dropna(how = "all")
     return df.dropna(how = "all" , axis = 1)
 
-def does_df_iloc_val_matches_ptrn(df ,
-                                  iat: tuple ,
-                                  ptrn: (str , None)) -> bool :
+def does_df_iloc_val_matches_ptrn(df , iat: tuple , ptrn: (str , None)
+                                  ) -> bool :
     row , col = iat
     cell_v = df.iat[row , col]
 
