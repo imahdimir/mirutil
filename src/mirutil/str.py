@@ -8,7 +8,6 @@ import pandas as pd
 from persiantools import characters
 from persiantools import digits
 
-
 def convert_digits_to_en(istr) :
     if not isinstance(istr , str) :
         return istr
@@ -20,10 +19,10 @@ def rm_odd_chars(istr) :
     if not isinstance(istr , str) :
         return istr
     repmap = {
-            r"\u202b" : ' ' ,
-            r'\u200c' : ' ' ,
-            r'\u200d' : '' ,
-            r'\u200f' : '' ,
+            '\u202b' : ' ' ,
+            '\u200c' : ' ' ,
+            '\u200d' : '' ,
+            '\u200f' : '' ,
             }
     os = istr
     for ky , vl in repmap.items() :
