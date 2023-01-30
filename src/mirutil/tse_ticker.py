@@ -7,8 +7,8 @@ from mirutil.str import normalize_completley_and_rm_all_whitespaces as ncr
 
 n2f_url = 'https://github.com/imahdimir/d-Name-2-FirmTicker'
 
-def get_ticker_by_name(name) :
-    gd = GitHubDataRepo(n2f_url)
+def get_ticker_by_name(name , src = n2f_url) :
+    gd = GitHubDataRepo(src)
     df = gd.read_data()
 
     nm1 = ncr(name)
@@ -29,8 +29,8 @@ def get_ticker_by_name(name) :
 
     gd.rmdir()
 
-def get_ticker_by_name_in_df(df , name_col , target_col) :
-    gd = GitHubDataRepo(n2f_url)
+def get_ticker_by_name_in_df(df , name_col , target_col , src = n2f_url) :
+    gd = GitHubDataRepo(src)
     dfa = gd.read_data()
 
     dfa['nm'] = dfa['Name'].apply(ncr)
