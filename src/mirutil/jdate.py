@@ -29,7 +29,7 @@ def make_zero_padded_jdate_ie_iso_fmt(ist , sep = '/') :
     spl = ist.split(sep)
     for _i in range(1 , 3) :
         if int(spl[_i]) < 10 :
-            spl[_i] = '0' + spl[_i]
+            spl[_i] = '0' + str(int(spl[_i]))
     ou = '-'.join(spl)
     return ou
 
