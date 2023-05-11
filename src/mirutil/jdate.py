@@ -11,7 +11,6 @@ from persiantools.jdatetime import JalaliDate
 
 from .str import convert_digits_to_en
 
-
 def persian_tools_jdate_from_int(jdate_int_fmt: {int , str}) :
     jd = jdate_int_fmt
     if not (isinstance(jd , str) or isinstance(jd , int)) :
@@ -33,6 +32,15 @@ def make_zero_padded_jdate_ie_iso_fmt(ist , sep = '/') :
             spl[_i] = '0' + spl[_i]
     ou = '-'.join(spl)
     return ou
+
+def make_persiantools_jdate_from_str(ist , sep = '-') :
+    ist = make_zero_padded_jdate_ie_iso_fmt(ist , sep = sep)
+    ist = ist.replace('-' , '')
+    return persian_tools_jdate_from_int(ist)
+
+def convert_jdate_to_date_from_str(ist , sep = '-') :
+    jd = make_persiantools_jdate_from_str(ist , sep = sep)
+    return jd.to_gregorian().isoformat()
 
 def make_datetime_from_iso_jdate_time(ist) :
     ptr = r'(\d{4})-(\d{2})-(\d{2})(\s*T?\s*)(\d{2}):(\d{2}):(\d{2})'
