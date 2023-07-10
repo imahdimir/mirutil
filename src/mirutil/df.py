@@ -44,7 +44,7 @@ def save_df_as_prq(df , fp , index: bool = False) -> None :
     df.to_parquet(fp , index = index)
 
     w = 'without index' if not index else 'with index'
-    print(f'dataframe saved as {fp} {w}')
+    print(f'Dataframe saved as {fp} {w}')
 
 def read_data_according_to_type(fp) -> pd.DataFrame :
     suf = Path(fp).suffix
