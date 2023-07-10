@@ -4,7 +4,6 @@
 
 from pathlib import Path
 
-
 def get_all_subdirs(root_dir) :
     """ returns all subdirectories of the root_dir"""
     return Path(root_dir).glob('**')
@@ -27,8 +26,7 @@ def has_subdir(dirp: Path) :
             return True
     return False
 
-def make_dir_if_not_exist(dirr) :
-    di = Path(dirr)
-    if not di.exists() :
-        di.mkdir()
-    return di
+def make_dir_if_not_exist(dyr: Path | str) :
+    dyr = Path(dyr)
+    Path(dyr).mkdir(exist_ok = True)
+    return dyr

@@ -9,7 +9,7 @@ from datetime import time
 from numpy import vectorize
 from persiantools.jdatetime import JalaliDate
 
-from .str import convert_digits_to_en
+from .strr import convert_digits_to_en
 
 def persian_tools_jdate_from_int(jdate_int_fmt: {int , str}) :
     jd = jdate_int_fmt
