@@ -40,9 +40,11 @@ def update_with_last_run_data(df , fp) :
         df.update(lastdf)
     return df
 
-def save_as_prq_wo_index(df , fp) -> None :
-    df.to_parquet(fp , index = False)
-    print(f'dataframe saved as {fp} without index')
+def save_df_as_prq(df , fp , index: bool = False) -> None :
+    df.to_parquet(fp , index = index)
+
+    w = 'without index' if not index else 'with index'
+    print(f'dataframe saved as {fp} {w}')
 
 def read_data_according_to_type(fp) -> pd.DataFrame :
     suf = Path(fp).suffix
