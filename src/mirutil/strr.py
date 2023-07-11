@@ -3,7 +3,6 @@
   """
 
 import re
-import pandas as pd
 
 from persiantools import characters
 from persiantools import digits

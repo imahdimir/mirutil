@@ -4,7 +4,6 @@
 
 from gitignore_parser import parse_gitignore
 
-
 def make_tex_code_4_forest_tree_fr_rootdir(root_dir , gitignore_fp) :
     flt = parse_gitignore(gitignore_fp)
 

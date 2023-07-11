@@ -7,7 +7,6 @@ from pathlib import Path
 
 from giteasy import GitHubRepo
 
-
 def rm_all_in_datalore_cwd() :
     """Remove all files and directories in the current working directory.
 

@@ -2,8 +2,8 @@
 
     """
 
-from pathlib import Path
 import runpy
+from pathlib import Path
 
 def get_modules_to_run_from_path(modules_dir: Path | str) -> list[Path] :
     """

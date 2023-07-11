@@ -5,7 +5,6 @@
 import json
 import tarfile
 
-
 def read_file(fp , mode = 'r' , encoding = 'utf-8') :
     if mode == 'rb' :
         with open(fp , mode) as f :

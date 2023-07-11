@@ -6,7 +6,6 @@ import pandas as pd
 from html_table_parser.parser import HTMLTableParser
 from lxml import etree
 
-
 hdn_xpth = {
         "//*[@hidden]"                          : None ,
         '//*[contains(@style, "display:none")]' : None ,

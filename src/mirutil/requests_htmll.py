@@ -18,7 +18,6 @@ from requests_html import HTMLSession
 from .const import Const
 from .files import write_txt_to_file_async
 
-
 nest_asyncio.apply()
 
 cte = Const()
@@ -43,7 +42,8 @@ async def get_a_req_and_render_by_requests_html_async(url ,
                                                       params = None ,
                                                       verify = True ,
                                                       get_timeout = None ,
-                                                      render_timeout = None) :
+                                                      render_timeout = None
+                                                      ) :
     r = await ases.get(url ,
                        headers = headers ,
                        params = params ,

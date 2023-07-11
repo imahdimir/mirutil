@@ -5,7 +5,6 @@
 import re
 from dataclasses import dataclass
 
-
 @dataclass
 class RFindFn :
     fn: (str , None)

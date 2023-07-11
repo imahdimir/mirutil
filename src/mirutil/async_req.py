@@ -3,20 +3,19 @@
     """
 
 import asyncio
+from asyncio.exceptions import TimeoutError
 from dataclasses import dataclass
 from functools import partial
 
 import nest_asyncio
+from aiohttp import ClientResponse
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.client_exceptions import ClientOSError
 from aiohttp.client_exceptions import ClientPayloadError
-from aiohttp import ClientResponse
-from asyncio.exceptions import TimeoutError
 
 from .const import Const
 from .files import write_to_file_async
-
 
 nest_asyncio.apply()
 
@@ -33,7 +32,8 @@ async def _get_a_req_async(url ,
                            headers = cte.headers ,
                            params = None ,
                            ssl = True ,
-                           timeout = None) :
+                           timeout = None
+                           ) :
     try :
         r = await client_session.get(url ,
                                      headers = headers ,
@@ -79,7 +79,8 @@ async def _get_a_req_and_save_async(url ,
                                     write_mode ,
                                     encoding ,
                                     get_timeout ,
-                                    **kwargs) :
+                                    **kwargs
+                                    ) :
     o = await _get_a_req_async(url ,
                                client_session ,
                                timeout = get_timeout ,
@@ -105,7 +106,8 @@ async def _get_reqs_and_save_async(urls ,
                                    write_mode ,
                                    encoding ,
                                    get_timeout ,
-                                   **kwargs) :
+                                   **kwargs
+                                   ) :
     cs = ClientSession()
     f = partial(_get_a_req_and_save_async ,
                 client_session = cs ,
@@ -125,7 +127,8 @@ def get_reqs_and_save_async_sync(urls ,
                                  write_mode = 'w' ,
                                  encoding = 'utf-8' ,
                                  get_timeout = 10 ,
-                                 **kwargs) :
+                                 **kwargs
+                                 ) :
     return asyncio.run(_get_reqs_and_save_async(urls ,
                                                 fps ,
                                                 mode = mode ,
