@@ -4,13 +4,9 @@
 
 import importlib
 
-import pandas as pd
-
-
 importlib.reload(df_utils)
 
 from src.mirutil.df import *
-
 
 ##
 fp0 = '/Users/mahdi/Dropbox/1-git-dirs/PyCharm/u-d0-FirmTicker-MonthlySales/Tables/232760-0.xlsx'

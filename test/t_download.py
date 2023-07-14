@@ -6,7 +6,6 @@ import requests
 
 from src.mirutil.const import Const
 
-
 cte = Const()
 
 ##

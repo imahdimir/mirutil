@@ -4,15 +4,11 @@
 
 import importlib
 
-import pandas as pd
-
 from src.mirutil import html
-
 
 importlib.reload(html)
 
 from src.mirutil.html import *
-
 
 ##
 def read_html(fp) -> str :
@@ -32,7 +28,6 @@ html = etree_to_html(tr1)
 
 ##
 from html_table_parser import HTMLTableParser
-
 
 p = HTMLTableParser()
 p.feed(html)
