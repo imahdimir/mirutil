@@ -2,6 +2,7 @@
 
   """
 
+import datetime
 import re
 from datetime import datetime as dt
 from datetime import time
@@ -37,6 +38,10 @@ def make_persiantools_jdate_from_str(ist , sep = '-') :
     ist = make_zero_padded_jdate_ie_iso_fmt(ist , sep = sep)
     ist = ist.replace('-' , '')
     return persian_tools_jdate_from_int(ist)
+
+def convert_str_jdate_to_date(ist: str , sep = '-') -> datetime.date :
+    jd = make_persiantools_jdate_from_str(ist , sep = sep)
+    return jd.to_gregorian()
 
 def convert_jdate_to_date_from_str(ist , sep = '-') :
     jd = make_persiantools_jdate_from_str(ist , sep = sep)
