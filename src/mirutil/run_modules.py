@@ -37,13 +37,22 @@ def run_modules_from_dir_in_order(modules_dir: Path | str) -> None :
 
         runpy.run_path(str(m) , run_name = '__main__')
 
-def clean_cache_dirs(set_inculde , set_exclude , inculde_defaults = True) :
+def clean_cache_dirs(inculding_set: set[Path] = None ,
+                     excluding_set: set[Path] = None ,
+                     inculde_defaults: bool = True
+                     ) -> None :
     """
     removes cache dirs
     some defaults + some manual to include - some to exculde
 
     : include_defaults: whether to include defaults
     """
+
+    # default argument values
+    if excluding_set is None :
+        excluding_set = {}
+    if inculding_set is None :
+        inculding_set = {}
 
     # default dirs
     if inculde_defaults :
@@ -53,8 +62,8 @@ def clean_cache_dirs(set_inculde , set_exclude , inculde_defaults = True) :
         dyrs = {}
 
     # include & exclude manually
-    dyrs = dyrs.union(set(set_inculde))
-    dyrs = dyrs.difference(set(set_exclude))
+    dyrs = dyrs.union(set(inculding_set))
+    dyrs = dyrs.difference(set(excluding_set))
 
     # remove final set of dirs one by one
     print('Cleaning cache : ' , dyrs)
