@@ -9,6 +9,8 @@ from typing import Union
 
 import pandas as pd
 
+from .classs import return_not_special_variables_of_class
+
 def save_df_as_a_nice_xl(df ,
                          fpn ,
                          index: bool = False ,
@@ -214,3 +216,8 @@ def does_df_iloc_val_matches_ptrn(df , iat: tuple , ptrn: (str , None)
 
     cell_v = str(cell_v)
     return re.fullmatch(ptrn , cell_v) is not None
+
+def reorder_df_cols_as_a_class_values(df: pd.DataFrame , cls: type
+                                      ) -> pd.DataFrame :
+    """ Reorders df columns as the order of values of a class """
+    return df[return_not_special_variables_of_class(cls).values()]
