@@ -107,15 +107,16 @@ def make_jdate_col_fr_str_date_col_in_a_df(df: pd.DataFrame ,
     d = date_col
     jd = jdate_col
 
-    _df = df[[d]].drop_duplicates()
+    df[d] = pd.to_datetime(df[d] , format = date_fmt)
 
-    _df[d] = pd.to_datetime(_df[d] , format = date_fmt)
+    _df = df[[d]].drop_duplicates()
 
     fu = vectorize(JalaliDateTime.to_jalali)
     _df[jd] = _df[d].apply(fu)
 
     _df[jd] = _df[jd].apply(lambda x : x.strftime('%Y-%m-%d'))
     _df[d] = _df[d].apply(lambda x : x.strftime('%Y-%m-%d'))
+    df[d] = df[d].apply(lambda x : x.strftime('%Y-%m-%d'))
 
     df = df.merge(_df , on = d , how = 'left')
 
