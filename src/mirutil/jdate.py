@@ -99,11 +99,11 @@ def ret_an_iso_jdate_fr_a_date(date: str , date_fmt = '%Y-%m-%d') -> str :
     jd = JalaliDateTime.to_jalali(d)
     return jd.strftime('%Y-%m-%d')
 
-def make_jdate_col_from_str_date_col(df ,
-                                     date_col ,
-                                     jdate_col ,
-                                     date_fmt = '%Y-%m-%d'
-                                     ) :
+def make_jdate_col_fr_str_date_col_in_a_df(df: pd.DataFrame ,
+                                           date_col ,
+                                           jdate_col ,
+                                           date_fmt = '%Y-%m-%d'
+                                           ) -> pd.DataFrame :
     d = date_col
     jd = jdate_col
 
