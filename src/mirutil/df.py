@@ -222,9 +222,8 @@ def reorder_df_cols_as_a_class_values(df: pd.DataFrame , cls: type
     """ Reorders df columns as the order of values of a class """
     return df[return_not_special_variables_of_class(cls).values()]
 
-def assert_no_duplicated_rows_in_a_df_cols_subset(df: pd.DataFrame ,
-                                                  subset: list
-                                                  ) -> None :
+def assert_no_duplicated_rows_in_df_cols_subset(df: pd.DataFrame , subset: list
+                                                ) -> None :
     msk = df.duplicated(subset = subset)
     _df = df[msk]
 
