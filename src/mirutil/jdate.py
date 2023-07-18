@@ -4,11 +4,13 @@
 
 import datetime
 import re
-from datetime import datetime as dt
+from datetime import datetime
 from datetime import time
 
+import pandas as pd
 from numpy import vectorize
 from persiantools.jdatetime import JalaliDate
+from persiantools.jdatetime import JalaliDateTime
 
 from .strr import convert_digits_to_en
 
@@ -58,7 +60,7 @@ def make_datetime_from_iso_jdate_time(ist) :
 
     t = time(int(cnd.group(5)) , int(cnd.group(6)) , int(cnd.group(7)))
 
-    date_time = dt.combine(date , t)
+    date_time = datetime.combine(date , t)
     return date_time
 
 fu0 = make_datetime_from_iso_jdate_time
@@ -91,3 +93,30 @@ def ex_1st_jmonth_fr_fa_str(s , sep = '/') :
     tu = ex_1st_jdate_fr_fa_str(s , sep)
     if isinstance(tu , tuple) :
         return tu[0] + '-' + tu[1]
+
+def ret_an_iso_jdate_fr_a_date(date: str , date_fmt = '%Y-%m-%d') -> str :
+    d = datetime.strptime(date , date_fmt)
+    jd = JalaliDateTime.to_jalali(d)
+    return jd.strftime('%Y-%m-%d')
+
+def make_jdate_col_from_str_date_col(df ,
+                                     date_col ,
+                                     jdate_col ,
+                                     date_fmt = '%Y-%m-%d'
+                                     ) :
+    d = date_col
+    jd = jdate_col
+
+    _df = df[[d]].drop_duplicates()
+
+    _df[d] = pd.to_datetime(_df[d] , format = date_fmt)
+
+    fu = vectorize(JalaliDateTime.to_jalali)
+    _df[jd] = _df[d].apply(fu)
+
+    _df[jd] = _df[jd].apply(lambda x : x.strftime('%Y-%m-%d'))
+    _df[d] = _df[d].apply(lambda x : x.strftime('%Y-%m-%d'))
+
+    df = df.merge(_df , on = d , how = 'left')
+
+    return df
