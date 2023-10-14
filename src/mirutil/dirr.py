@@ -7,13 +7,13 @@ from pathlib import Path
 from githubdata import default_containing_dir
 
 class DefaultDirs :
-    md = Path('modules/')
-    md.mkdir(exist_ok = True)
+    m = Path('modules/')
+    m.mkdir(exist_ok = True)
 
     gd = default_containing_dir
 
-    td = Path('temp_data/')
-    td.mkdir(exist_ok = True)
+    t = Path('temp_data/')
+    t.mkdir(exist_ok = True)
 
 def get_all_subdirs(root_dir) :
     """ returns all subdirectories of the root_dir"""

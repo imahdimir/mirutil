@@ -10,23 +10,29 @@ from .dirr import DefaultDirs
 
 def get_modules_to_run_from_path(modules_dir: Path | str) -> list[Path] :
     """
-
+    finds all .py files in modules_dir that start with '_' and
+    sorts them based on the number after '_'. This is the convention
+    I use to specify modules to run in order. The number after '_' is
+    used to specify the order. There might be other modules in the same
+    dir that are not prefixed with '_' and they will not be run. There
+    are auxiliary modules.
     """
 
     # get all .py files in modules_dir
     pys = Path(modules_dir).glob('*.py')
 
     # filter those that start with '_'
-    moduls = [x for x in pys if x.name.startswith('_')]
+    ms = [x for x in pys if x.name.startswith('_')]
 
-    # sort them based on the number after _
-    moduls = sorted(moduls)
+    # sort .py files them based on the number after _
+    ms = sorted(ms)
 
-    return moduls
+    return ms
 
-def run_modules_from_dir_in_order(modules_dir: Path | str) -> None :
+def run_modules_from_dir_in_order(modules_dir: Path | str = DefaultDirs().m) -> None :
     """
-
+    runs all modules in modules_dir that start with '_' based on the number
+    after '_'.
     """
 
     ms = get_modules_to_run_from_path(modules_dir)
@@ -45,7 +51,7 @@ def clean_cache_dirs(inculding_set: set[Path] = None ,
     removes cache dirs
     some defaults + some manual to include - some to exculde
 
-    : include_defaults: whether to include defaults
+    include_defaults: whether to include defaults
     """
 
     # default argument values
@@ -57,16 +63,16 @@ def clean_cache_dirs(inculding_set: set[Path] = None ,
     # default dirs
     if inculde_defaults :
         dyr = DefaultDirs()
-        dyrs = {dyr.gd , dyr.td}
+        dyrs = {dyr.gd , dyr.t}
     else :
         dyrs = {}
 
     # include & exclude manually
-    dyrs = dyrs.union(set(inculding_set))
-    dyrs = dyrs.difference(set(excluding_set))
+    dyrs = dyrs.union(inculding_set)
+    dyrs = dyrs.difference(excluding_set)
 
-    # remove final set of dirs one by one
-    print('Cleaning cache : ' , dyrs)
+    # remove the final set of dirs one by one
+    print('Cleaning cache directories : ' , dyrs)
 
     for di in dyrs :
         shutil.rmtree(di , ignore_errors = True)
