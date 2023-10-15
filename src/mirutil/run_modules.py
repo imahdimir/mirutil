@@ -37,11 +37,11 @@ def run_modules_from_dir_in_order(modules_dir: Path | str = DefaultDirs().m) -> 
     ms = get_modules_to_run_from_path(modules_dir)
     # run modules in order
     for m in ms :
-        print('\n\t*** Running them module : {}  ***\n'.format(m.name))
+        print('\n\t*** Running The Module \" {} \" ***\n'.format(m.name))
 
         runpy.run_path(str(m) , run_name = '__main__')
 
-        print('\n\t*** The Module {} Done! ***\n'.format(m.name))
+        print('\n\t*** The Module \" {} \" Done! ***\n'.format(m.name))
 
 def clean_cache_dirs(inculding_set: set[Path] = None ,
                      excluding_set: set[Path] = None ,
