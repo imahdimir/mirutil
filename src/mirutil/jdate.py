@@ -99,25 +99,37 @@ def ret_an_iso_jdate_fr_a_date(date: str , date_fmt = '%Y-%m-%d') -> str :
     jd = JalaliDateTime.to_jalali(d)
     return jd.strftime('%Y-%m-%d')
 
-def make_jdate_col_fr_str_date_col_in_a_df(df: pd.DataFrame ,
-                                           date_col ,
-                                           jdate_col ,
-                                           date_fmt = '%Y-%m-%d'
-                                           ) -> pd.DataFrame :
+def gen_jdate_fr_date_in_df(df , date_col , jdate_col , date_fmt = '%Y-%m-%d'
+                            ) -> pd.DataFrame :
     d = date_col
     jd = jdate_col
 
-    df[d] = pd.to_datetime(df[d] , format = date_fmt)
-
     _df = df[[d]].drop_duplicates()
+    _df['h'] = pd.to_datetime(_df[d] , format = date_fmt)
 
     fu = vectorize(JalaliDateTime.to_jalali)
-    _df[jd] = _df[d].apply(fu)
+    _df[jd] = _df['h'].apply(fu)
 
-    _df[jd] = _df[jd].apply(lambda x : x.strftime('%Y-%m-%d'))
-    _df[d] = _df[d].apply(lambda x : x.strftime('%Y-%m-%d'))
-    df[d] = df[d].apply(lambda x : x.strftime('%Y-%m-%d'))
+    _df = _df.drop(columns = 'h')
 
     df = df.merge(_df , on = d , how = 'left')
+
+    return df
+
+def gen_iso_jdate_fr_jdate_in_df(df , jdate_col , iso_jdate_col
+                                 ) -> pd.DataFrame :
+    jd = jdate_col
+    ijd = 'h' if iso_jdate_col == jd else iso_jdate_col
+
+    _df = df[[jd]].drop_duplicates()
+    _df[ijd] = _df[jd].apply(lambda x : x.strftime('%Y-%m-%d'))
+
+    df = df.merge(_df , on = jd , how = 'left')
+
+    if ijd == 'h' :
+        df = df.drop(columns = jd)
+        df = df.rename(columns = {
+                'h' : jd
+                })
 
     return df
