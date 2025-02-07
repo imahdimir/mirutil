@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mirutil"
-version = "25.1.0"
+version = "25.2.0"
 authors = [{ name = "Mahdi Mir", email = "imahdimir@gmail.com" }]
 description = "Tools for getting and cleaning TSE data"
 readme = "README.md"
@@ -30,6 +30,7 @@ dependencies = [
     "IPython",
     "multiprocess",
     "githubdata",
+    "zstandard",
 ]
 
 classifiers = [

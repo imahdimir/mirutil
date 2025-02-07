@@ -1,1 +1,3 @@
-mirutil package
+```bash
+pip install githubdata
+```
