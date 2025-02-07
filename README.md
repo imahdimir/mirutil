@@ -1,3 +1,3 @@
 ```bash
-pip install githubdata
+pip install mirutil
 ```
